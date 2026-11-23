@@ -1021,14 +1021,19 @@ const VIEWS = {
       const value = puzzle.solution.map((row) => row.map(() => false));
       if (api.mode === "example") puzzle.solution.forEach((row, r) => row.forEach((v, c) => { value[r][c] = v; }));
       const full = el("div", "bits");
-      const cols = puzzle.axis === "v" ? puzzle.full[0].length : puzzle.full[0].length;
-      full.style.gridTemplateColumns = `repeat(${cols}, 28px)`;
+      const cols = puzzle.full[0].length;
+      const cell = mirrorCellSize(cols);
+      full.style.gap = "4px";
+      full.style.gridTemplateColumns = `repeat(${cols}, ${cell}px)`;
+      full.style.width = "max-content";
+      full.style.maxWidth = "100%";
       if (puzzle.axis === "v") {
         puzzle.full.forEach((row, r) => {
           row.forEach((bit, c) => {
             const editable = c >= 2;
             const b = el("button", bit && !editable ? "bit on fixed" : "bit");
             b.type = "button";
+            sizeMirrorCell(b, cell);
             if (!editable && bit) b.classList.add("on");
             if (editable) {
               const ec = c - 2;
@@ -1048,6 +1053,7 @@ const VIEWS = {
             const editable = r >= 2;
             const b = el("button", "bit");
             b.type = "button";
+            sizeMirrorCell(b, cell);
             if (!editable && bit) b.classList.add("on");
             if (editable) {
               if (value[r - 2][c]) b.classList.add("on");
@@ -1325,6 +1331,20 @@ function orderFace(puzzle, id, lang) {
   const chip = el("div", "wordchip");
   t(chip, item.et, item.en, lang);
   return chip;
+}
+
+function mirrorCellSize(cols) {
+  const gap = 4;
+  const maxBoard = 300;
+  const fitted = Math.floor((maxBoard - gap * Math.max(0, cols - 1)) / cols);
+  return Math.min(44, Math.max(40, fitted));
+}
+
+function sizeMirrorCell(node, size) {
+  node.style.width = `${size}px`;
+  node.style.height = `${size}px`;
+  node.style.minWidth = `${size}px`;
+  node.style.minHeight = `${size}px`;
 }
 
 function bitGrid(grid) {
