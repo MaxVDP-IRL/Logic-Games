@@ -45,6 +45,7 @@ export const UI = {
   typesTitle: { et: "Ülesanded", en: "Puzzles" },
   playThis: { et: "Tee see", en: "Do this one" },
   another: { et: "Järgmine", en: "Another" },
+  show: { et: "Näita", en: "Show me" },
   seen: { et: "Vaata veel korra", en: "Look once more" },
   remember: { et: "Hoia meeles…", en: "Hold it in your mind…" },
   place: { et: "Puuduta kasti, kuhu see käib.", en: "Tap the box where it belongs." },

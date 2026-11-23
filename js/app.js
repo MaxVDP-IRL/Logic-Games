@@ -325,6 +325,7 @@ function playView() {
   done.textContent = item.mode === "example" ? tx("try", L()) : tx("done", L());
   done.addEventListener("click", () => {
     if (item.mode === "example" || locked) advance();
+    else if (done.dataset.skip === "1") revealAndContinue(item);
     else submit();
   });
   actions.append(done);
@@ -395,8 +396,11 @@ function setLanguage(next) {
       kicker.textContent = `${modeLabel} · ${tx("level", next)} ${item.level}`;
     }
     app.querySelectorAll(".dock .btn").forEach((btn) => {
-      if (btn.classList.contains("primary")) btn.textContent = item.mode === "example" ? tx("try", next) : tx("done", next);
-      else if (!btn.classList.contains("ghost")) btn.textContent = tx("hint", next);
+      if (btn.classList.contains("primary")) {
+        if (locked) btn.textContent = tx("next", next);
+        else if (btn.dataset.skip === "1") btn.textContent = tx("show", next);
+        else btn.textContent = item.mode === "example" ? tx("try", next) : tx("done", next);
+      } else if (!btn.classList.contains("ghost")) btn.textContent = tx("hint", next);
       else btn.textContent = tx("quit", next);
     });
     mounted.setLang(next);
@@ -467,6 +471,28 @@ function submit(answer) {
   misses += 1;
   showNote(misses >= 2 ? item.puzzle.nudge : item.puzzle.hint, "help");
   if (misses >= 2 && mounted?.revealStep) mounted.revealStep();
+  if (misses >= 3) offerSkip();
+}
+
+function offerSkip() {
+  const done = app.querySelector(".dock .btn.primary");
+  if (!done || done.dataset.skip) return;
+  done.dataset.skip = "1";
+  done.textContent = tx("show", L());
+}
+
+function revealAndContinue(item) {
+  if (locked) return;
+  if (mounted?.revealStep) mounted.revealStep();
+  showNote(item.puzzle.explain, "help");
+  if (item.mode === "solo" || item.mode === "guided") {
+    state.seen[item.type] = true;
+    if (item.mode === "solo") recordResult(state, item.type, item.level, false, today());
+    save();
+  }
+  locked = true;
+  const done = app.querySelector(".dock .btn.primary");
+  if (done) done.textContent = tx("next", L());
 }
 
 function showNote(copy, kind) {

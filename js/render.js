@@ -360,7 +360,18 @@ const VIEWS = {
         });
       }
       paint();
-      return { getAnswer: () => values.filter((_, i) => puzzle.tiles[i] == null) };
+      return {
+        getAnswer: () => values.filter((_, i) => puzzle.tiles[i] == null),
+        revealStep() {
+          puzzle.solution.forEach((key, n) => {
+            const hole = blanks[n];
+            if (!hole) return;
+            values[hole.i] = key;
+          });
+          cursor = -1;
+          paint();
+        },
+      };
     }
     return choiceRow(host, puzzle, api, (opt) => tileBox(opt).outerHTML);
   },
@@ -436,23 +447,38 @@ const VIEWS = {
       });
       pool.append(b);
     });
+    function paintBoxes() {
+      boxes.querySelectorAll(".plate").forEach((plate) => {
+        const names = [...placed.entries()]
+          .filter(([, boxId]) => boxId === plate.dataset.box)
+          .map(([id]) => {
+            const item = puzzle.items.find((it) => it.id === id);
+            return api.lang === "en" ? item.en : item.et;
+          });
+        plate.querySelector(".hold").textContent = names.join(" ");
+      });
+    }
     puzzle.boxes.forEach((box) => {
       const b = el("button", "plate");
       b.type = "button";
-      t(el("strong"), box.et, box.en, api.lang);
-      const hold = el("div", "caption");
+      b.dataset.box = box.id;
+      const hold = el("div", "hold caption");
       b.append(t(el("span"), box.et, box.en, api.lang), hold);
       b.addEventListener("click", () => {
         if (api.mode === "example" || !armed) return;
         placed.set(armed, box.id);
         armed = null;
-        hold.textContent = [...placed.entries()].filter(([, bx]) => bx === box.id).map(([id]) => puzzle.items.find((it) => it.id === id).et).join(" ");
+        paintBoxes();
         paint();
       });
       boxes.append(b);
     });
     host.append(pool, boxes);
-    return { getAnswer: () => [...placed.entries()].map(([id, box]) => `${id}>${box}`).sort() };
+    paintBoxes();
+    return {
+      getAnswer: () => [...placed.entries()].map(([id, box]) => `${id}>${box}`).sort(),
+      setLang() { paintBoxes(); },
+    };
   },
 
   scene(host, puzzle, api) {
@@ -580,21 +606,21 @@ const VIEWS = {
     const showFace = () => {
       stage.innerHTML = "";
       const row = el("div", "row");
-      puzzle.show.forEach((card) => row.append(cardButton(card, null)));
+      puzzle.show.forEach((card) => row.append(cardButton(card, null, api.lang)));
       stage.append(row);
     };
     const ask = () => {
       stage.innerHTML = "";
       if (puzzle.mode === "gone") {
         const remain = el("div", "row");
-        puzzle.remain.forEach((card) => remain.append(cardButton(card, null)));
+        puzzle.remain.forEach((card) => remain.append(cardButton(card, null, api.lang)));
         stage.append(remain);
         const opts = el("div", "choices");
         puzzle.options.forEach((card) => {
           const b = cardButton(card, () => {
             answer = card.id;
             api.onPick(card.id);
-          });
+          }, api.lang);
           if (api.mode === "example" && card.id === puzzle.solution) b.classList.add("circled");
           opts.append(b);
         });
@@ -608,7 +634,7 @@ const VIEWS = {
             else chosen.add(card.id);
             b.classList.toggle("circled", chosen.has(card.id));
             answer = [...chosen].sort();
-          });
+          }, api.lang);
           if (chosen.has(card.id)) b.classList.add("circled");
           opts.append(b);
         });
@@ -626,7 +652,7 @@ const VIEWS = {
               chosen.splice(chosen.indexOf(id), 1);
               answer = chosen.slice();
               paint();
-            }));
+            }, api.lang));
           });
           for (let i = chosen.length; i < puzzle.show.length; i++) slots.append(el("div", "slot"));
         };
@@ -636,7 +662,7 @@ const VIEWS = {
             chosen.push(card.id);
             answer = chosen.slice();
             paint();
-          }));
+          }, api.lang));
         });
         answer = chosen.slice();
         paint();
@@ -1071,7 +1097,7 @@ const VIEWS = {
         const id = placed[i];
         const s = el("button", "slot");
         s.type = "button";
-        if (id) s.append(orderFace(puzzle, id));
+        if (id) s.append(orderFace(puzzle, id, api.lang));
         s.addEventListener("click", () => {
           if (!id || api.mode === "example") return;
           placed.splice(i, 1);
@@ -1087,7 +1113,7 @@ const VIEWS = {
       const b = el("button", "choice");
       b.type = "button";
       b.dataset.id = item.id;
-      b.append(orderFace(puzzle, item.id));
+      b.append(orderFace(puzzle, item.id, api.lang));
       b.addEventListener("click", () => {
         if (api.mode === "example" || placed.includes(item.id) || placed.length >= puzzle.solution.length) return;
         placed.push(item.id);
@@ -1097,7 +1123,10 @@ const VIEWS = {
     });
     host.append(slots, pool);
     paint();
-    return { getAnswer: () => placed.slice() };
+    return {
+      getAnswer: () => placed.slice(),
+      setLang() { paint(); },
+    };
   },
 
   analogy(host, puzzle, api) {
@@ -1105,14 +1134,32 @@ const VIEWS = {
     if (puzzle.mode === "number") {
       stem.append(el("div", "blank given", String(puzzle.stem.a)), el("div", "op", "→"), el("div", "blank given", String(puzzle.stem.b)), el("div", "op", "·"), el("div", "blank given", String(puzzle.stem.c)), el("div", "op", "→"), el("div", "blank dashed", "?"));
     } else {
-      stem.append(face(puzzle.stem.a), el("div", "op", "→"), face(puzzle.stem.b));
-      stem.append(el("div", "op", "·"), face(puzzle.stem.c), el("div", "op", "→ ?"));
+      stem.append(face(puzzle.stem.a, api.lang), el("div", "op", "→"), face(puzzle.stem.b, api.lang));
+      stem.append(el("div", "op", "·"), face(puzzle.stem.c, api.lang), el("div", "op", "→ ?"));
     }
     host.append(stem);
     if (puzzle.mode === "number") {
       return choiceRow(host, puzzle, api, (opt) => `<span class="op">${opt}</span>`);
     }
-    return choiceRow(host, puzzle, api, (opt) => `${icon(opt.icon, { size: 56 })}<span class="caption">${api.lang === "en" ? opt.en : opt.et}</span>`);
+    const row = el("div", "choices");
+    let picked = api.mode === "example" ? puzzle.solution : null;
+    puzzle.options.forEach((opt, i) => {
+      const b = el("button", "choice");
+      b.type = "button";
+      b.innerHTML = icon(opt.icon, { size: 56 });
+      b.append(t(el("span", "caption"), opt.et, opt.en, api.lang));
+      if (picked === i) b.classList.add("circled");
+      b.addEventListener("click", () => {
+        if (api.mode === "example") return;
+        picked = i;
+        row.querySelectorAll(".choice").forEach((n) => n.classList.remove("circled"));
+        b.classList.add("circled");
+        api.onPick(i);
+      });
+      row.append(b);
+    });
+    host.append(row);
+    return { getAnswer: () => picked };
   },
 
   matrix(host, puzzle, api) {
@@ -1256,27 +1303,27 @@ function tileBoxHtml(key) {
   return tileBox({ shape, color }).innerHTML;
 }
 
-function cardButton(card, onClick) {
+function cardButton(card, onClick, lang) {
   const b = el("button", "choice");
   b.type = "button";
   b.innerHTML = icon(card.icon, { size: 64 });
-  b.append(t(el("span", "caption"), card.et, card.en, "et"));
+  b.append(t(el("span", "caption"), card.et, card.en, lang));
   if (onClick) b.addEventListener("click", onClick);
   return b;
 }
 
-function face(info) {
+function face(info, lang) {
   const b = el("div", "choice");
   b.innerHTML = icon(info.icon, { size: 56 });
-  b.append(t(el("span", "caption"), info.et, info.en, "et"));
+  b.append(t(el("span", "caption"), info.et, info.en, lang));
   return b;
 }
 
-function orderFace(puzzle, id) {
+function orderFace(puzzle, id, lang) {
   const item = puzzle.items.find((it) => it.id === id);
   if (puzzle.display === "sticks") return el("div", "stick", stickSvg(item.size, 36));
   const chip = el("div", "wordchip");
-  t(chip, item.et, item.en, "et");
+  t(chip, item.et, item.en, lang);
   return chip;
 }
 

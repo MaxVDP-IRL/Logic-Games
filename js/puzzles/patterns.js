@@ -61,6 +61,7 @@ export function generate(level, seed) {
   if (level === 3) hideAt.push(rng.int(motif.length, seq.length - motif.length));
   else hideAt.push(seq.length - 1);
   if (level === 5 && rng.chance(0.45) && seq.length >= 2) hideAt.push(seq.length - 2);
+  hideAt.sort((a, b) => a - b);
 
   const missing = hideAt.map((i) => ({ ...seq[i] }));
   const shown = seq.map((t, i) => (hideAt.includes(i) ? null : { ...t }));
@@ -141,6 +142,11 @@ export function invariants(p) {
   const errs = [];
   if (!grade(p, p.solution) || (p.mode === "choice" && grade(p, p.alt))) errs.push("grade");
   if (p.mode === "build" && grade(p, p.alt) && p.alt.join() !== p.solution.join()) errs.push("alt");
+  if (p.mode === "build") {
+    const leftToRight = p.tiles.flatMap((tile, i) => (tile ? [] : [p.motif[i % p.motif.length]]));
+    if (!same(leftToRight, p.solution)) errs.push("order");
+    if (!grade(p, leftToRight)) errs.push("ltr");
+  }
   if (p.mode === "choice") {
     const motif = p.motif;
     let fit = 0;

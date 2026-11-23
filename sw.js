@@ -1,4 +1,4 @@
-const VERSION = "nuputaja-v1";
+const VERSION = "nuputaja-v2";
 
 const ASSETS = [
   "./",
@@ -65,8 +65,10 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(
       fetch(request)
         .then((response) => {
-          const copy = response.clone();
-          caches.open(VERSION).then((cache) => cache.put("./index.html", copy)).catch(() => {});
+          if (response && response.ok) {
+            const copy = response.clone();
+            caches.open(VERSION).then((cache) => cache.put("./index.html", copy)).catch(() => {});
+          }
           return response;
         })
         .catch(() => caches.match("./index.html"))

@@ -68,6 +68,41 @@ test("mastery moves one level at a time", () => {
   assert.equal(progress.levels.sudoku, 1);
 });
 
+function answerAsTheBoardReads(puzzle) {
+  if (puzzle.view === "pattern" && puzzle.mode === "build") {
+    return puzzle.tiles.flatMap((tile, i) => (tile ? [] : [puzzle.motif[i % puzzle.motif.length]]));
+  }
+  return puzzle.solution;
+}
+
+test("ui grade accepts the real answer for every type and level", () => {
+  for (const mod of MODULES) {
+    for (let level = 1; level <= 5; level++) {
+      for (let seed = 1; seed <= 40; seed++) {
+        const puzzle = generate(mod.meta.id, level, seed * 1000 + level);
+        const answer = answerAsTheBoardReads(puzzle);
+        assert.equal(
+          grade(puzzle, answer),
+          true,
+          `${mod.meta.id} L${level} seed ${seed} rejected the board answer`
+        );
+        assert.equal(grade(puzzle, puzzle.solution), true);
+      }
+    }
+  }
+});
+
+test("level-5 patterns grade the left-to-right continuation", () => {
+  for (let seed = 1; seed <= 200; seed++) {
+    const puzzle = generate("patterns", 5, seed);
+    const leftToRight = answerAsTheBoardReads(puzzle);
+    assert.equal(grade(puzzle, leftToRight), true, `seed ${seed}`);
+    if (puzzle.mode === "build") assert.deepEqual(puzzle.solution, leftToRight);
+  }
+  const sample = generate("patterns", 5, 1);
+  assert.equal(grade(sample, answerAsTheBoardReads(sample)), true);
+});
+
 test("smoke: every type can be planned and graded", () => {
   const progress = freshProgress();
   for (const mod of MODULES) progress.solved[mod.meta.id] = 2;
