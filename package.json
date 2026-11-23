@@ -1,0 +1,10 @@
+{
+  "name": "nuputaja",
+  "private": true,
+  "type": "module",
+  "description": "Calm logic and maths practice for an Estonian pre-schooler.",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "start": "python3 -m http.server 4173"
+  }
+}
