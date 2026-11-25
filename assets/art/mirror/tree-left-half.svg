@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" fill="none">
+  <defs><clipPath id="cut-left"><rect x="0" y="0" width="128" height="256"/></clipPath></defs>
+  <g clip-path="url(#cut-left)">
+  <path d="M106 228 C 116 212 118 186 116 150 L 140 150 C 138 186 140 212 150 228 Z" fill="#8A5A32" stroke="#1A1714" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+  <g fill="#1A1714" stroke="#1A1714" stroke-width="14" stroke-linejoin="round" stroke-linecap="round">
+    <circle cx="78" cy="106" r="40"/>
+    <circle cx="78" cy="106" r="40" transform="matrix(-1 0 0 1 256 0)"/>
+    <circle cx="96" cy="146" r="38"/>
+    <circle cx="96" cy="146" r="38" transform="matrix(-1 0 0 1 256 0)"/>
+  </g>
+  <g>
+    <circle cx="78" cy="106" r="40" fill="#4FA83A"/>
+    <circle cx="78" cy="106" r="40" transform="matrix(-1 0 0 1 256 0)" fill="#4FA83A"/>
+    <circle cx="96" cy="146" r="38" fill="#4FA83A"/>
+    <circle cx="96" cy="146" r="38" transform="matrix(-1 0 0 1 256 0)" fill="#4FA83A"/>
+  </g>
+  <g fill="#1A1714" stroke="#1A1714" stroke-width="14" stroke-linejoin="round" stroke-linecap="round">
+    <circle cx="128" cy="76" r="48"/>
+    <circle cx="128" cy="132" r="46"/>
+  </g>
+  <g>
+    <circle cx="128" cy="76" r="48" fill="#4FA83A"/>
+    <circle cx="128" cy="132" r="46" fill="#4FA83A"/>
+  </g>
+  <circle cx="84" cy="110" r="9" fill="#E23048" stroke="#1A1714" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="84" cy="110" r="9" transform="matrix(-1 0 0 1 256 0)" fill="#E23048" stroke="#1A1714" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="128" cy="76" r="9" fill="#E23048" stroke="#1A1714" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="128" cy="140" r="9" fill="#E23048" stroke="#1A1714" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+  </g>
+</svg>

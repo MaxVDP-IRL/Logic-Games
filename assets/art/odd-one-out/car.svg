@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" fill="none">
+  <g stroke="#1A1714" stroke-width="7" stroke-linejoin="round" stroke-linecap="round">
+    <!-- solid sedan body first, then wheels on top; facing right -->
+    <path d="M30 168 L 30 146 L 52 146 L 78 96 C 84 84 96 76 112 76 L 158 76 C 178 76 194 90 204 108 L 228 146 L 236 146 C 248 146 248 182 236 182 L 30 182 C 18 182 18 168 30 168 Z" fill="#3A7FD4"/>
+    <!-- cabin windows -->
+    <path d="M64 146 L 86 104 C 90 96 100 90 110 90 L 152 90 C 166 90 178 98 186 110 L 200 146 Z" fill="#A4D4F0"/>
+    <path d="M138 90 V146" fill="none" stroke-width="5"/>
+    <!-- headlight and taillight -->
+    <rect x="222" y="150" width="14" height="16" rx="4" fill="#F0C030"/>
+    <rect x="30" y="150" width="12" height="16" rx="3" fill="#E03A32"/>
+    <!-- wheels overlap the lower body so the car sits on them -->
+    <circle cx="84" cy="198" r="28" fill="#2C2C2C"/>
+    <circle cx="84" cy="198" r="12" fill="#D0D4D8"/>
+    <circle cx="184" cy="198" r="28" fill="#2C2C2C"/>
+    <circle cx="184" cy="198" r="12" fill="#D0D4D8"/>
+  </g>
+</svg>

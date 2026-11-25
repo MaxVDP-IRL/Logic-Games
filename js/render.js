@@ -1,4 +1,4 @@
-import { icon, shapeSvg, coinSvg, clockSvg, childSvg, stickSvg } from "./icons.js";
+import { icon, shapeSvg, coinSvg, clockSvg, childSvg, stickSvg, oddPicture, artSrc } from "./icons.js";
 import { nextStep } from "./puzzles/pyramid.js";
 import { tx } from "./i18n.js";
 
@@ -379,12 +379,12 @@ const VIEWS = {
   odd(host, puzzle, api) {
     let picked = null;
     let reason = null;
-    const row = el("div", "choices");
+    let reasonsShown = false;
+    const row = el("div", "choices odd-choices");
     puzzle.items.forEach((item) => {
       const b = el("button", "choice");
       b.type = "button";
-      b.innerHTML = icon(item.icon, { size: 64 });
-      if (item.striped) b.append(el("div", "caption", "≡"));
+      b.innerHTML = oddPicture(item.art);
       b.append(t(el("span", "caption"), item.et, item.en, api.lang));
       if (api.mode === "example" && item.id === (puzzle.solution.id || puzzle.solution)) b.classList.add("circled");
       b.addEventListener("click", () => {
@@ -399,15 +399,20 @@ const VIEWS = {
       row.append(b);
     });
     host.append(row);
-    const reasonRow = el("div", "choices");
+    const reasonRow = el("div", "choices reasons");
     function showReasons() {
-      reasonRow.innerHTML = "";
+      if (reasonsShown) return;
+      reasonsShown = true;
       puzzle.reasons.forEach((r) => {
         const b = el("button", "choice");
         b.type = "button";
         t(b, r.et, r.en, api.lang);
+        if (api.mode === "example" && r.id === puzzle.reason) b.classList.add("circled");
         b.addEventListener("click", () => {
+          if (api.mode === "example") return;
           reason = r.id;
+          reasonRow.querySelectorAll(".choice").forEach((n) => n.classList.remove("circled"));
+          b.classList.add("circled");
           api.onPick({ id: picked, reason });
         });
         reasonRow.append(b);
@@ -429,16 +434,19 @@ const VIEWS = {
       });
     }
     let armed = null;
-    const pool = el("div", "pool");
-    const boxes = el("div", "choices");
+    const pool = el("div", "pool odd-choices");
+    const boxes = el("div", "choices sorts");
     function paint() {
-      pool.querySelectorAll("button").forEach((b) => b.classList.toggle("selected", b.dataset.id === armed));
+      pool.querySelectorAll("button").forEach((b) => {
+        b.classList.toggle("selected", b.dataset.id === armed);
+        b.classList.toggle("placed", placed.has(b.dataset.id));
+      });
     }
     puzzle.items.forEach((item) => {
       const b = el("button", "choice");
       b.type = "button";
       b.dataset.id = item.id;
-      b.innerHTML = icon(item.icon, { size: 56 });
+      b.innerHTML = oddPicture(item.art);
       b.append(t(el("span", "caption"), item.et, item.en, api.lang));
       b.addEventListener("click", () => {
         if (api.mode === "example") return;
@@ -449,20 +457,20 @@ const VIEWS = {
     });
     function paintBoxes() {
       boxes.querySelectorAll(".plate").forEach((plate) => {
-        const names = [...placed.entries()]
-          .filter(([, boxId]) => boxId === plate.dataset.box)
-          .map(([id]) => {
-            const item = puzzle.items.find((it) => it.id === id);
-            return api.lang === "en" ? item.en : item.et;
-          });
-        plate.querySelector(".hold").textContent = names.join(" ");
+        const hold = plate.querySelector(".hold");
+        hold.innerHTML = "";
+        for (const [id, boxId] of placed) {
+          if (boxId !== plate.dataset.box) continue;
+          const item = puzzle.items.find((it) => it.id === id);
+          hold.insertAdjacentHTML("beforeend", oddPicture(item.art, true));
+        }
       });
     }
     puzzle.boxes.forEach((box) => {
       const b = el("button", "plate");
       b.type = "button";
       b.dataset.box = box.id;
-      const hold = el("div", "hold caption");
+      const hold = el("div", "hold");
       b.append(t(el("span"), box.et, box.en, api.lang), hold);
       b.addEventListener("click", () => {
         if (api.mode === "example" || !armed) return;
@@ -475,6 +483,7 @@ const VIEWS = {
     });
     host.append(pool, boxes);
     paintBoxes();
+    paint();
     return {
       getAnswer: () => [...placed.entries()].map(([id, box]) => `${id}>${box}`).sort(),
       setLang() { paintBoxes(); },
@@ -1017,68 +1026,15 @@ const VIEWS = {
   },
 
   mirror(host, puzzle, api) {
-    if (puzzle.mode === "tap") {
-      const value = puzzle.solution.map((row) => row.map(() => false));
-      if (api.mode === "example") puzzle.solution.forEach((row, r) => row.forEach((v, c) => { value[r][c] = v; }));
-      const full = el("div", "bits");
-      const cols = puzzle.full[0].length;
-      const cell = mirrorCellSize(cols);
-      full.style.gap = "4px";
-      full.style.gridTemplateColumns = `repeat(${cols}, ${cell}px)`;
-      full.style.width = "max-content";
-      full.style.maxWidth = "100%";
-      if (puzzle.axis === "v") {
-        puzzle.full.forEach((row, r) => {
-          row.forEach((bit, c) => {
-            const editable = c >= 2;
-            const b = el("button", bit && !editable ? "bit on fixed" : "bit");
-            b.type = "button";
-            sizeMirrorCell(b, cell);
-            if (!editable && bit) b.classList.add("on");
-            if (editable) {
-              const ec = c - 2;
-              if (value[r][ec]) b.classList.add("on");
-              b.addEventListener("click", () => {
-                if (api.mode === "example") return;
-                value[r][ec] = !value[r][ec];
-                b.classList.toggle("on", value[r][ec]);
-              });
-            }
-            full.append(b);
-          });
-        });
-      } else {
-        puzzle.full.forEach((row, r) => {
-          row.forEach((bit, c) => {
-            const editable = r >= 2;
-            const b = el("button", "bit");
-            b.type = "button";
-            sizeMirrorCell(b, cell);
-            if (!editable && bit) b.classList.add("on");
-            if (editable) {
-              if (value[r - 2][c]) b.classList.add("on");
-              b.addEventListener("click", () => {
-                if (api.mode === "example") return;
-                value[r - 2][c] = !value[r - 2][c];
-                b.classList.toggle("on", value[r - 2][c]);
-              });
-            }
-            full.append(b);
-          });
-        });
-      }
-      host.append(full);
-      return { getAnswer: () => value };
-    }
+    const board = el("div", "mirror-board");
+    if (puzzle.stem) board.append(mirrorStem(puzzle.stem));
+    if (puzzle.mode === "grid" && puzzle.grid) board.append(bitGrid(puzzle.grid));
     let picked = api.mode === "example" ? puzzle.solution : null;
-    const row = el("div", "choices");
-    const figures = puzzle.mode === "odd"
-      ? puzzle.figures.map((f) => f.left.map((line, r) => line.concat(f.right[r])))
-      : puzzle.options;
-    figures.forEach((grid, i) => {
+    const row = el("div", "choices mirror-choices");
+    puzzle.options.forEach((opt, i) => {
       const b = el("button", "choice");
       b.type = "button";
-      b.append(bitGrid(grid));
+      b.append(mirrorPieces(opt.pieces));
       if (picked === i) b.classList.add("circled");
       b.addEventListener("click", () => {
         if (api.mode === "example") return;
@@ -1089,7 +1045,8 @@ const VIEWS = {
       });
       row.append(b);
     });
-    host.append(row);
+    board.append(row);
+    host.append(board);
     return { getAnswer: () => picked };
   },
 
@@ -1333,26 +1290,58 @@ function orderFace(puzzle, id, lang) {
   return chip;
 }
 
-function mirrorCellSize(cols) {
-  const gap = 4;
-  const maxBoard = 300;
-  const fitted = Math.floor((maxBoard - gap * Math.max(0, cols - 1)) / cols);
-  return Math.min(44, Math.max(40, fitted));
+function mirrorStem(stem) {
+  const row = el("div", "mirror-stem");
+  row.append(halfNode(stem.file, stem.align), mirrorLine());
+  return row;
 }
 
-function sizeMirrorCell(node, size) {
-  node.style.width = `${size}px`;
-  node.style.height = `${size}px`;
-  node.style.minWidth = `${size}px`;
-  node.style.minHeight = `${size}px`;
+function mirrorPieces(pieces) {
+  const row = el("div", "mirror-pic");
+  if (pieces.length === 1) {
+    row.append(mirrorLine(), halfNode(pieces[0].file, pieces[0].align));
+    return row;
+  }
+  pieces.forEach((piece, index) => {
+    if (index) row.append(mirrorLine());
+    row.append(halfNode(piece.file, piece.align));
+  });
+  return row;
+}
+
+function mirrorLine() {
+  const line = el("div", "mirror-line");
+  line.setAttribute("aria-hidden", "true");
+  return line;
+}
+
+function halfNode(file, align) {
+  const box = el("div", `half align-${align}`);
+  const img = document.createElement("img");
+  img.src = artSrc("mirror", file);
+  img.alt = "";
+  img.draggable = false;
+  box.append(img);
+  return box;
 }
 
 function bitGrid(grid) {
-  const box = el("div", "mini");
-  box.style.gridTemplateColumns = `repeat(${grid[0].length}, 16px)`;
-  grid.forEach((row) => row.forEach((bit) => {
-    const c = el("i", bit ? "bit on" : "bit");
-    box.append(c);
+  const cols = grid[0].length;
+  const mid = Math.floor(cols / 2);
+  const cell = 44;
+  const box = el("div", "bits");
+  box.style.gridTemplateColumns = `repeat(${cols}, ${cell}px)`;
+  box.style.gap = "4px";
+  box.style.width = "max-content";
+  box.style.maxWidth = "100%";
+  grid.forEach((row) => row.forEach((bit, c) => {
+    const node = el("i", bit ? "bit on" : "bit");
+    node.style.width = `${cell}px`;
+    node.style.height = `${cell}px`;
+    node.style.minWidth = `${cell}px`;
+    node.style.minHeight = `${cell}px`;
+    if (c === mid) node.style.boxShadow = "inset 8px 0 0 #1c1915";
+    box.append(node);
   }));
   return box;
 }
