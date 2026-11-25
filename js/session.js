@@ -1,6 +1,9 @@
 import { makeRng, mixSeed } from "./rng.js";
-import { TYPE_ORDER, generate } from "./puzzles/index.js";
+import { TYPE_ORDER } from "./puzzles/index.js";
+import { generateFresh } from "./puzzles/variety.js";
 import { knownTypes, levelOf, accuracy } from "./progress.js";
+
+export const SESSION_SIZE = 6;
 
 function daysBetween(earlier, later) {
   if (!earlier || !later) return 99;
@@ -21,10 +24,13 @@ export function planSession(progress, seed, today = "2026-11-23") {
   const unknown = TYPE_ORDER.filter((t) => !known.includes(t));
   const items = [];
   let salt = 0;
+  const recentByType = {};
   const make = (type, mode) => {
     salt += 1;
     const level = levelOf(progress, type);
-    const puzzle = generate(type, level, mixSeed(seed, `${mode}:${type}:${salt}`));
+    const recent = recentByType[type] || [];
+    const { puzzle, key } = generateFresh(type, level, mixSeed(seed, `${mode}:${type}:${salt}`), recent);
+    recentByType[type] = recent.concat(key).slice(-8);
     return { type, mode, level, puzzle };
   };
 
@@ -55,8 +61,8 @@ export function planSession(progress, seed, today = "2026-11-23") {
   const pool = known.filter((t) => t !== review);
   const mix = pool.length ? pool : known;
   let guard = 0;
-  while (items.length < 6 && guard++ < 12) items.push(make(rng.pick(mix), "solo"));
+  while (items.length < SESSION_SIZE && guard++ < 12) items.push(make(rng.pick(mix), "solo"));
   const fresh = items.filter((it) => it.mode !== "solo" || !known.includes(it.type));
   const introduced = [...new Set(fresh.map((it) => it.type))];
-  return { newType, review, items: items.slice(0, 6), introduced };
+  return { newType, review, items: items.slice(0, SESSION_SIZE), introduced };
 }

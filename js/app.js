@@ -1,9 +1,10 @@
-import { tx } from "./i18n.js";
+import { tx, txf } from "./i18n.js";
 import { loadProgress, saveProgress } from "./storage.js";
 import { speak, stopSpeech } from "./speech.js";
-import { planSession } from "./session.js";
-import { TYPE_ORDER, metaOf, generate, grade } from "./puzzles/index.js";
-import { levelOf, recordResult } from "./progress.js";
+import { planSession, SESSION_SIZE } from "./session.js";
+import { TYPE_ORDER, metaOf, grade } from "./puzzles/index.js";
+import { generateFresh } from "./puzzles/variety.js";
+import { levelOf, recordResult, levelTrack } from "./progress.js";
 import { mount } from "./render.js";
 import { SETS, STICKERS, awardSessionSticker } from "./stickers.js";
 import { icon, foxBadge } from "./icons.js";
@@ -18,6 +19,7 @@ let startedAt = 0;
 let levelUps = [];
 let locked = false;
 let clockTimer = null;
+const recentByType = {};
 
 const app = document.querySelector("#app");
 
@@ -90,7 +92,7 @@ function homeView() {
   view.innerHTML = `
     <article class="hero">
       <h1>${tx("hello", L())}</h1>
-      <p>${tx("lead", L())}</p>
+      <p>${txf("stickerGoal", L(), { n: SESSION_SIZE })}</p>
       <button class="btn primary" data-start>${tx("start", L())}</button>
     </article>
     <div class="home-row">
@@ -202,9 +204,17 @@ function bookView() {
 function celebrateView() {
   const view = document.createElement("section");
   view.className = "home celebrate";
+  const total = route.total || SESSION_SIZE;
+  view.append(filledMeter(total));
+  const doneLine = document.createElement("p");
+  doneLine.className = "goal-line";
+  const doneKey = route.award?.star ? "sessionDoneStar" : "sessionDone";
+  doneLine.textContent = txf(doneKey, L(), { n: total });
+  view.append(doneLine);
   const h = document.createElement("h2");
   h.textContent = route.praise;
   view.append(h);
+  if (state.autoRead) speak(doneLine.textContent, L());
   if (route.award?.sticker) {
     const card = document.createElement("div");
     card.className = "sticker pop big-sticker";
@@ -261,21 +271,131 @@ function byeView() {
   return view;
 }
 
+function textLine(className, et, en) {
+  const node = document.createElement("span");
+  node.className = className;
+  node.dataset.et = et;
+  node.dataset.en = en;
+  node.textContent = L() === "en" ? en : et;
+  return node;
+}
+
+function filledMeter(total) {
+  const box = document.createElement("div");
+  box.className = "meter";
+  const row = document.createElement("div");
+  row.className = "meter-row";
+  const dots = document.createElement("div");
+  dots.className = "dots";
+  for (let i = 0; i < total; i++) {
+    const mark = document.createElement("i");
+    mark.className = "done";
+    dots.append(mark);
+  }
+  const count = document.createElement("span");
+  count.className = "count";
+  count.textContent = `${total} / ${total}`;
+  const star = document.createElement("span");
+  star.className = "meter-star";
+  star.innerHTML = icon("star", { size: 28 });
+  row.append(textLine("tag", tx("meterSticker", "et"), tx("meterSticker", "en")), dots, count, star);
+  box.append(row);
+  return box;
+}
+
+function levelMeter(item) {
+  const track = levelTrack(state, item.type);
+  const row = document.createElement("div");
+  row.className = "meter-row level";
+  row.dataset.levelMeter = "1";
+  const pips = document.createElement("div");
+  pips.className = "dots";
+  pips.dataset.levelPips = "1";
+  for (let i = 1; i <= 5; i++) {
+    const mark = document.createElement("i");
+    if (i <= track.level) mark.className = "done";
+    pips.append(mark);
+  }
+  row.append(textLine("tag", tx("meterLevel", "et"), tx("meterLevel", "en")), pips);
+  if (track.goal) {
+    const sub = document.createElement("div");
+    sub.className = "dots sub";
+    sub.dataset.levelSub = "1";
+    for (let i = 0; i < track.goal; i++) {
+      const mark = document.createElement("i");
+      if (i < track.have) mark.className = "done";
+      sub.append(mark);
+    }
+    const count = document.createElement("span");
+    count.className = "count";
+    count.dataset.levelCount = "1";
+    count.textContent = `${track.have} / ${track.goal}`;
+    row.append(sub, count);
+  }
+  return row;
+}
+
+function sessionMeter(item) {
+  const total = session.items.length;
+  const done = session.index;
+  const box = document.createElement("div");
+  box.className = "meter";
+  const row = document.createElement("div");
+  row.className = "meter-row";
+  const dots = document.createElement("div");
+  dots.className = "dots";
+  dots.dataset.sessionMeter = "1";
+  session.items.forEach((it, i) => {
+    const mark = document.createElement("i");
+    if (i < done) mark.className = "done";
+    else if (i === done) mark.className = "on";
+    if (it.mode === "example") mark.classList.add("star");
+    dots.append(mark);
+  });
+  const count = document.createElement("span");
+  count.className = "count";
+  count.dataset.sessionCount = "1";
+  count.textContent = `${done} / ${total}`;
+  const star = document.createElement("span");
+  star.className = "meter-star";
+  star.innerHTML = icon("star", { size: 22 });
+  row.append(textLine("tag", tx("meterSticker", "et"), tx("meterSticker", "en")), dots, count, star);
+  box.append(row);
+  if (done === 0) {
+    const line = document.createElement("p");
+    line.className = "goal-line";
+    const et = txf("stickerGoal", "et", { n: total });
+    const en = txf("stickerGoal", "en", { n: total });
+    line.dataset.et = et;
+    line.dataset.en = en;
+    line.textContent = L() === "en" ? en : et;
+    box.append(line);
+  }
+  box.append(levelMeter(item));
+  return box;
+}
+
+function syncMeters() {
+  if (session && route.source === "session") {
+    const shown = session.index + (locked ? 1 : 0);
+    app.querySelectorAll("[data-session-meter] i").forEach((mark, i) => {
+      mark.classList.toggle("done", i < shown);
+      mark.classList.toggle("on", i === session.index && !locked);
+    });
+    const count = app.querySelector("[data-session-count]");
+    if (count) count.textContent = `${Math.min(shown, session.items.length)} / ${session.items.length}`;
+  }
+  const host = app.querySelector("[data-level-meter]");
+  if (!host || route.name !== "play") return;
+  host.replaceWith(levelMeter(currentItem()));
+}
+
 function playView() {
   const item = currentItem();
   const meta = metaOf(item.type);
   const view = document.createElement("section");
   view.className = "stage";
-  const dots = document.createElement("div");
-  dots.className = "dots";
-  if (session && route.source === "session") {
-    session.items.forEach((it, i) => {
-      const mark = document.createElement("i");
-      if (i === session.index) mark.className = "on";
-      if (it.mode === "example") mark.classList.add("star");
-      dots.append(mark);
-    });
-  }
+  const meter = route.source === "session" && session ? sessionMeter(item) : levelMeter(item);
   const sheet = document.createElement("article");
   sheet.className = "sheet";
   const kicker = document.createElement("p");
@@ -337,7 +457,7 @@ function playView() {
     else go({ name: route.returnHome ? "home" : "types" });
   });
   dock.append(note, actions, quit);
-  view.append(dots, sheet, dock);
+  view.append(meter, sheet, dock);
   mounted = mount(task, item.puzzle, {
     lang: L(),
     mode: item.mode,
@@ -425,7 +545,7 @@ function startFree(type, level, extra = {}) {
     type,
     level,
     mode: seen ? "solo" : "example",
-    puzzle: safeGenerate(type, level),
+    puzzle: freshPuzzle(type, level),
   };
   session = null;
   startedAt = Date.now();
@@ -433,15 +553,12 @@ function startFree(type, level, extra = {}) {
   draw();
 }
 
-function safeGenerate(type, level) {
-  for (let i = 0; i < 6; i++) {
-    try {
-      return generate(type, level, (Date.now() + i * 97) >>> 0);
-    } catch {
-      /* try another seed */
-    }
-  }
-  return generate(type, 1, 1);
+function freshPuzzle(type, level) {
+  const recent = recentByType[type] || [];
+  const seed = (Date.now() + recent.length * 97) >>> 0;
+  const { puzzle, key } = generateFresh(type, level, seed || 1, recent);
+  recentByType[type] = recent.concat(key).slice(-8);
+  return puzzle;
 }
 
 function submit(answer) {
@@ -465,6 +582,7 @@ function submit(answer) {
     }
     const done = app.querySelector(".dock .btn.primary");
     if (done) done.textContent = tx("next", L());
+    syncMeters();
     speak(item.puzzle.praise[L()], L());
     return;
   }
@@ -493,6 +611,7 @@ function revealAndContinue(item) {
   locked = true;
   const done = app.querySelector(".dock .btn.primary");
   if (done) done.textContent = tx("next", L());
+  syncMeters();
 }
 
 function showNote(copy, kind) {
@@ -507,7 +626,7 @@ function advance() {
   if (route.source === "free") {
     const item = currentItem();
     if (item.mode === "example" || item.mode === "guided") {
-      route.item = { ...item, mode: "solo", puzzle: safeGenerate(item.type, item.level) };
+      route.item = { ...item, mode: "solo", puzzle: freshPuzzle(item.type, item.level) };
       draw();
       return;
     }
@@ -515,7 +634,7 @@ function advance() {
       go({ name: "home" });
       return;
     }
-    route.item = { ...item, mode: "solo", puzzle: safeGenerate(item.type, item.level) };
+    route.item = { ...item, mode: "solo", puzzle: freshPuzzle(item.type, item.level) };
     draw();
     return;
   }
@@ -525,23 +644,42 @@ function advance() {
 }
 
 function finishSession() {
+  const total = session.items.length;
   const award = awardSessionSticker(state);
   state.sessionsCompleted = (state.sessionsCompleted || 0) + 1;
   save();
   const praise = solvedCount > 0 ? tx("sessionPraise", L()) : tx("effort", L());
   const ups = levelUps.slice();
   session = null;
-  go({ name: "celebrate", award, praise, levelUps: ups });
+  go({ name: "celebrate", award, praise, levelUps: ups, total });
+}
+
+function progressSpeech(item) {
+  const lang = L();
+  const bits = [];
+  if (route.source === "session" && session) {
+    const total = session.items.length;
+    if (session.index === 0) bits.push(txf("stickerGoal", lang, { n: total }));
+    else bits.push(txf("progressSay", lang, { have: session.index, n: total }));
+  }
+  const track = levelTrack(state, item.type);
+  if (track.goal && track.have > 0) bits.push(txf("levelSay", lang, { have: track.have, n: track.goal }));
+  else if (track.goal && route.source === "session" && session && session.index === 0) {
+    bits.push(txf("levelNeed", lang, { n: track.goal }));
+  }
+  return bits.join(" ");
 }
 
 function speechText(puzzle) {
   const lang = L();
+  let body;
   if (puzzle.clues) {
-    return `${puzzle.clues.map((c) => c[lang]).join(" ")} ${puzzle.question ? puzzle.question[lang] : ""}`;
-  }
-  if (puzzle.say) return puzzle.say[lang];
-  if (puzzle.text) return `${puzzle.prompt[lang]} ${puzzle.text[lang]}`;
-  return puzzle.prompt[lang];
+    body = `${puzzle.clues.map((c) => c[lang]).join(" ")} ${puzzle.question ? puzzle.question[lang] : ""}`;
+  } else if (puzzle.say) body = puzzle.say[lang];
+  else if (puzzle.text) body = `${puzzle.prompt[lang]} ${puzzle.text[lang]}`;
+  else body = puzzle.prompt[lang];
+  const intro = progressSpeech(currentItem());
+  return intro ? `${intro} ${body}` : body;
 }
 
 function armSpeech(force = false) {

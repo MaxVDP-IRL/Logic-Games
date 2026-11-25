@@ -74,7 +74,7 @@ export function generate(level, seed) {
   }
 
   for (let attempt = 0; attempt < 100; attempt++) {
-    const step = level <= 2 ? 1 : level === 4 ? rng.pick([2, -1]) : rng.pick([1, 2, -1]);
+    const step = level === 1 ? (rng.chance(0.35) ? -1 : 1) : level <= 2 ? 1 : level === 4 ? rng.pick([2, -1]) : rng.pick([1, 2, -1]);
     const length = level === 1 ? rng.int(3, 5) : level >= 5 ? rng.int(5, 7) : rng.int(4, 6);
     const span = step * (length - 1);
     const start = step > 0 ? rng.int(lo, hi - span) : rng.int(lo - span, hi);

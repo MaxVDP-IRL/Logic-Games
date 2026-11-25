@@ -2,7 +2,8 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { MODULES, generate, grade, invariants } from "../js/puzzles/index.js";
 import { planSession } from "../js/session.js";
-import { freshProgress, recordResult } from "../js/progress.js";
+import { freshProgress, recordResult, levelTrack } from "../js/progress.js";
+import { feelKey, generateRun } from "../js/puzzles/variety.js";
 import { etClock, enClock } from "../js/content.js";
 
 const SEEDS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
@@ -101,6 +102,54 @@ test("level-5 patterns grade the left-to-right continuation", () => {
   }
   const sample = generate("patterns", 5, 1);
   assert.equal(grade(sample, answerAsTheBoardReads(sample)), true);
+});
+
+test("early levels promote after three clean solves in a row", () => {
+  const progress = freshProgress();
+  recordResult(progress, "missing", 1, true, "2026-11-23");
+  assert.deepEqual(levelTrack(progress, "missing"), { level: 1, goal: 3, have: 1 });
+  recordResult(progress, "missing", 1, false, "2026-11-23");
+  assert.equal(levelTrack(progress, "missing").have, 0);
+  recordResult(progress, "missing", 1, true, "2026-11-23");
+  recordResult(progress, "missing", 1, true, "2026-11-23");
+  assert.equal(levelTrack(progress, "missing").have, 2);
+  const up = recordResult(progress, "missing", 1, true, "2026-11-23");
+  assert.equal(up.leveledUp, true);
+  assert.equal(progress.levels.missing, 2);
+  assert.equal(levelTrack(progress, "missing").have, 0);
+  assert.equal(levelTrack(progress, "missing").goal, 3);
+
+  const later = freshProgress();
+  later.levels.clock = 3;
+  for (let i = 0; i < 3; i++) recordResult(later, "clock", 3, true, "2026-11-23");
+  assert.equal(later.levels.clock, 3);
+  assert.equal(levelTrack(later, "clock").have, 3);
+  assert.equal(levelTrack(later, "clock").goal, 4);
+  assert.equal(recordResult(later, "clock", 3, true, "2026-11-23").leveledUp, true);
+  assert.equal(later.levels.clock, 4);
+});
+
+test("early levels do not repeat the same puzzle back to back", () => {
+  const count = 6;
+  for (const mod of MODULES) {
+    for (const level of [1, 2]) {
+      const items = generateRun(mod.meta.id, level, count, 20261125 + level * 17);
+      const keys = items.map(feelKey);
+      assert.equal(keys.length, count, mod.meta.id);
+      for (let i = 1; i < keys.length; i++) {
+        assert.notEqual(keys[i], keys[i - 1], `${mod.meta.id} L${level} repeated at ${i}`);
+      }
+      const distinct = new Set(keys).size;
+      assert.ok(distinct >= 4, `${mod.meta.id} L${level} only ${distinct} distinct feels`);
+    }
+  }
+});
+
+test("a first session does not repeat the opening puzzle", () => {
+  const plan = planSession(freshProgress(), 42, "2026-11-23");
+  const keys = plan.items.map((item) => feelKey(item.puzzle));
+  for (let i = 1; i < keys.length; i++) assert.notEqual(keys[i], keys[i - 1]);
+  assert.ok(new Set(keys).size >= 4);
 });
 
 test("smoke: every type can be planned and graded", () => {

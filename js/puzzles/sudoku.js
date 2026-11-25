@@ -192,7 +192,7 @@ export function generate(level, seed) {
     const cells = rng.shuffle([[0, 0], [0, 1], [1, 0], [1, 1]]);
     const blanks = level === 1 ? 1 : 2;
     for (let i = 0; i < blanks; i++) clues[cells[i][0]][cells[i][1]] = null;
-    const symbols = PICTURES.slice(0, 2);
+    const symbols = rng.shuffle(PICTURES).slice(0, 2).map((picture, i) => ({ id: i + 1, icon: picture.icon }));
     return finish(level, seed, clues, grid, symbols, false);
   }
 

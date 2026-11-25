@@ -55,7 +55,7 @@ export function generate(level, seed) {
   }
 
   const target = targetFor(level);
-  const visible = rng.int(0, level === 1 ? target - 1 : target);
+  const visible = rng.int(level === 1 ? 1 : 0, level === 1 ? target - 1 : target);
   const hidden = target - visible;
   const pictures = level === 1;
   return basePuzzle(meta, level, seed, {

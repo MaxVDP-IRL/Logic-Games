@@ -255,7 +255,50 @@ button:focus-visible, .choice:focus-visible, .cell:focus-visible {
   border: 2px solid #fbf6ea; display: block; opacity: 0.45;
 }
 .dots i.on { opacity: 1; background: #fbf6ea; }
+.dots i.done { opacity: 1; background: #fbf6ea; border-color: #fbf6ea; }
 .dots i.star { border-radius: 2px; transform: rotate(45deg); }
+.meter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  position: relative;
+  color: #fbf6ea;
+  max-width: 100%;
+}
+.meter-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  max-width: 100%;
+  color: #fbf6ea;
+}
+.meter-row.level { margin-bottom: 8px; }
+.meter .meter-row.level { margin-bottom: 0; }
+.meter .dots, .meter-row .dots { margin: 0; }
+.meter .dots i, .meter-row .dots i { width: 14px; height: 14px; }
+.dots.sub i { width: 12px; height: 12px; }
+.dots.sub i.done { background: var(--gold); border-color: var(--gold); }
+.meter .count, .meter-row .count {
+  font-weight: 700;
+  font-size: 1rem;
+  min-width: 2.6rem;
+  text-align: center;
+}
+.meter .tag, .meter-row .tag { font-weight: 700; font-size: 0.95rem; }
+.meter-star { display: grid; place-items: center; color: var(--gold); }
+.meter-star svg { display: block; }
+.goal-line {
+  text-align: center;
+  color: #fbf6ea;
+  font-size: 1.05rem;
+  line-height: 1.35;
+  margin: 0;
+  max-width: 100%;
+}
 
 .pyramid { display: flex; flex-direction: column-reverse; align-items: center; gap: 8px; }
 .prow { display: flex; gap: 8px; }
@@ -471,6 +514,22 @@ button:focus-visible, .choice:focus-visible, .cell:focus-visible {
 @media (min-width: 800px) {
   .album { grid-template-columns: repeat(6, 1fr); }
   .sheet { padding: 22px 26px 26px; }
+}
+@media (max-width: 420px) {
+  .pad { gap: 4px; grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .pad button { min-width: 0; padding: 0; }
+}
+@media (max-width: 360px) {
+  .top { gap: 4px; padding: 8px 6px 6px; }
+  .brand { font-size: 1rem; gap: 4px; min-width: 0; }
+  .iconbtn { min-width: 44px; min-height: 44px; padding: 2px; flex: 0 0 auto; }
+  .top .iconbtn img { width: 32px; height: 32px; }
+  .langswitch { padding: 2px; flex: 0 0 auto; }
+  .langswitch button { min-width: 44px; min-height: 44px; padding: 0 4px; }
+  .quiet { min-width: 0; }
+  .stage, .home, .book, .types { padding-left: 6px; padding-right: 6px; }
+  .sheet { padding-left: 6px; padding-right: 6px; }
+  .home-row .btn { font-size: 1rem; padding-left: 8px; padding-right: 8px; }
 }
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }

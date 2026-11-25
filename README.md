@@ -23,7 +23,7 @@ Do not open `index.html` as a file. The app is a set of ES modules, so it needs 
 
 ## Puzzle types
 
-Each type is generated from a seed, checked before it is shown, and has five levels. A practice session is about six short puzzles: a new type starts with a worked example and a guided one, then known types are mixed. The level moves up after 4 of the last 5 clean solves and steps back after three struggles.
+Each type is generated from a seed, checked before it is shown, and has five levels. A practice session is six short puzzles: a new type starts with a worked example and a guided one, then known types are mixed. Finishing the session adds a sticker. Levels 1 and 2 move up after 3 clean solves in a row. Later levels still move up after 4 of the last 5 clean solves. A level steps back after three struggles. Early puzzles in one session are chosen so the same answer, numbers and layout do not come up twice in a row.
 
 | Type | What Mia does |
 |---|---|
@@ -68,6 +68,6 @@ In the repository on GitHub:
 
 The address will look like `https://<user>.github.io/<repository>/`. Paths are relative, so a project site works without a build step.
 
-The service worker cache is named `nuputaja-v2`. Raise that name in `sw.js` when you ship a change you want already-installed phones to pick up. Pages also loads HTML from the network first, so an open online phone gets the new page and then the new files.
+The service worker cache is named `nuputaja-v3`. Raise that name in `sw.js` when you ship a change you want already-installed phones to pick up. Pages also loads HTML from the network first, so an open online phone gets the new page and then the new files.
 
 A private repository may need GitHub Pages enabled for private sites (this depends on the account plan). The workflow does not change repository settings for you.

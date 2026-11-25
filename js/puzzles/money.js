@@ -17,11 +17,12 @@ export function generate(level, seed) {
   const rng = makeRng(mixSeed(seed, `money-${level}`));
 
   if (level === 1) {
-    const coins = [
-      { ...coin("1e"), uid: "a" },
-      { ...coin("2e"), uid: "b" },
-    ];
-    const ask = rng.pick(coins);
+    const askId = rng.pick(["1e", "2e"]);
+    const otherId = askId === "1e" ? "2e" : "1e";
+    const coins = [{ ...coin(askId), uid: "ask" }];
+    const otherCount = rng.int(1, 3);
+    for (let i = 0; i < otherCount; i++) coins.push({ ...coin(otherId), uid: `o${i}` });
+    const ask = coins[0];
     return basePuzzle(meta, level, seed, {
       view: "money",
       mode: "circle",
