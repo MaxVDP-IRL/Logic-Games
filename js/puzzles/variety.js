@@ -76,9 +76,8 @@ export function feelKey(puzzle) {
     return `maze:${JSON.stringify(puzzle.hWall || null)}:${JSON.stringify(puzzle.vWall || null)}:${puzzle.end?.c},${puzzle.end?.r}:${JSON.stringify(puzzle.symbols || {})}`;
   }
   if (t === "mirror") {
-    if (puzzle.left) return `mir:${JSON.stringify(puzzle.left)}`;
-    if (puzzle.full) return `mir:${JSON.stringify(puzzle.full)}`;
-    return `mir:${JSON.stringify(puzzle.figures)}`;
+    const parts = (puzzle.options || []).map((opt) => opt.key).sort().join(",");
+    return `mir:${puzzle.picture}:${puzzle.mode}:${parts}`;
   }
   if (t === "order") {
     if (puzzle.display === "sticks") return `ord:${puzzle.items.map((i) => i.size).sort((a, b) => a - b).join(",")}`;

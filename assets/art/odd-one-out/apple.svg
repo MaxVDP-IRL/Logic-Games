@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" fill="none">
+  <g stroke="#1A1714" stroke-width="7" stroke-linejoin="round" stroke-linecap="round">
+    <!-- leaf -->
+    <path d="M140 70 C 140 40 174 28 200 44 C 186 70 156 78 140 70 Z" fill="#4F9A3A"/>
+    <path d="M140 70 C 160 58 180 50 198 46" fill="none" stroke-width="3"/>
+    <!-- stem -->
+    <path d="M128 86 C 126 62 134 46 146 36" fill="none" stroke-width="8"/>
+    <!-- body, slight top dent -->
+    <path d="M128 86 C 108 78 64 96 52 148 C 42 192 70 226 128 226 C 186 226 214 192 204 148 C 192 96 148 78 128 86 Z" fill="#E23028"/>
+  </g>
+</svg>

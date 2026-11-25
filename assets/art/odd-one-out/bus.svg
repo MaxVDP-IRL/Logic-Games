@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" fill="none">
+  <g stroke="#1A1714" stroke-width="7" stroke-linejoin="round" stroke-linecap="round">
+    <!-- tall boxy body, flat front (no hitch-like snout), facing right -->
+    <path d="M28 188 L 28 72 C 28 58 38 50 52 50 L 210 50 C 228 50 236 62 236 78 L 236 188 C 236 196 228 200 220 200 L 218 200 C 218 172 206 166 192 166 C 178 166 166 172 166 200 L 108 200 C 108 172 96 166 82 166 C 68 166 56 172 56 200 L 40 200 C 32 200 28 196 28 188 Z" fill="#F0B400"/>
+    <!-- window row -->
+    <rect x="44" y="66" width="36" height="40" rx="5" fill="#A4D4F0"/>
+    <rect x="88" y="66" width="36" height="40" rx="5" fill="#A4D4F0"/>
+    <rect x="132" y="66" width="36" height="40" rx="5" fill="#A4D4F0"/>
+    <rect x="176" y="66" width="44" height="40" rx="5" fill="#A4D4F0"/>
+    <!-- door on the lower front side -->
+    <rect x="176" y="118" width="36" height="66" rx="4" fill="#F0B400"/>
+    <path d="M194 118 V184" fill="none" stroke-width="4"/>
+    <!-- stripe stops at the door -->
+    <rect x="36" y="116" width="132" height="10" rx="2" fill="#E07A20" stroke="none"/>
+    <!-- headlight and taillight, inset on the flat front and rear -->
+    <rect x="220" y="132" width="16" height="16" rx="4" fill="#F0C030"/>
+    <rect x="28" y="132" width="12" height="16" rx="3" fill="#E03A32"/>
+    <!-- wheels on top of the wheel openings -->
+    <circle cx="82" cy="200" r="26" fill="#2C2C2C"/>
+    <circle cx="82" cy="200" r="11" fill="#D0D4D8"/>
+    <circle cx="192" cy="200" r="26" fill="#2C2C2C"/>
+    <circle cx="192" cy="200" r="11" fill="#D0D4D8"/>
+  </g>
+</svg>

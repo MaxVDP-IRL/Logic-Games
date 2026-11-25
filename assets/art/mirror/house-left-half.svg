@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" fill="none">
+  <defs><clipPath id="cut-left"><rect x="0" y="0" width="128" height="256"/></clipPath></defs>
+  <g clip-path="url(#cut-left)">
+  <g stroke="#1A1714" stroke-width="7" stroke-linejoin="round" stroke-linecap="round">
+    <!-- walls -->
+    <rect x="48" y="118" width="160" height="108" fill="#F3E2B8"/>
+    <!-- roof with slight eaves overhang -->
+    <polygon points="24,124 128,28 232,124" fill="#D13A32"/>
+    <!-- circular gable window, centred on the fold -->
+    <circle cx="128" cy="88" r="16" fill="#7EC8E8"/>
+    <!-- side windows, mirrored around x=128: 62+38=100, 256-62-38=156 -->
+    <rect x="62" y="140" width="38" height="38" rx="4" fill="#7EC8E8"/>
+    <rect x="156" y="140" width="38" height="38" rx="4" fill="#7EC8E8"/>
+    <!-- window crosses, mirrored -->
+    <path d="M81 140 V178 M62 159 H100" stroke-width="4"/>
+    <path d="M175 140 V178 M156 159 H194" stroke-width="4"/>
+    <!-- door, centred (104–152), bottom flush with wall -->
+    <rect x="104" y="156" width="48" height="70" rx="3" fill="#6B4530"/>
+    <!-- centred knocker (an offset knob would break symmetry) -->
+    <circle cx="128" cy="192" r="6" fill="#F0C14A"/>
+  </g>
+  </g>
+</svg>

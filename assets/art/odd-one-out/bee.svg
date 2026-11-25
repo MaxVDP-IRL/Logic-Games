@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" fill="none">
+  <defs><clipPath id="bee-body"><ellipse cx="116" cy="146" rx="72" ry="46"/></clipPath></defs>
+  <ellipse cx="96" cy="84" rx="26" ry="40" transform="rotate(-25 96 84)" fill="#CFEAF7" stroke="#1A1714" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+  <ellipse cx="144" cy="78" rx="24" ry="38" transform="rotate(15 144 78)" fill="#CFEAF7" stroke="#1A1714" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+  <path d="M96 184 L 88 212 M120 190 L 118 214 M144 186 L 150 212" fill="none" stroke="#1A1714" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M50 130 L 12 146 L 50 162 Z" fill="#2A211B" stroke="#1A1714" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+  <ellipse cx="116" cy="146" rx="72" ry="46" fill="#F5C400" stroke="#1A1714" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+  <g clip-path="url(#bee-body)">
+  <rect x="80" y="90" width="20" height="120" fill="#2A211B"/>
+  <rect x="116" y="90" width="20" height="120" fill="#2A211B"/>
+  <rect x="152" y="90" width="20" height="120" fill="#2A211B"/>
+  </g>
+  <ellipse cx="116" cy="146" rx="72" ry="46" fill="none" stroke="#1A1714" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+  <path d="M206 114 C 206 98 214 88 226 82" fill="none" stroke="#1A1714" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="228" cy="80" r="7" fill="#1A1714"/>
+  <circle cx="192" cy="142" r="34" fill="#4A3626" stroke="#1A1714" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="200" cy="134" r="10" fill="#FFFFFF" stroke="#1A1714" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="203" cy="134" r="4.5" fill="#1A1714"/>
+  <path d="M196 156 C 204 162 214 160 218 154" fill="none" stroke="#F6EBD0" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

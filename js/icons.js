@@ -160,3 +160,12 @@ export function stickSvg(height, size = 28) {
 export function foxBadge(size = 42) {
   return icon("fox", { size });
 }
+
+export function artSrc(folder, file) {
+  return `assets/art/${folder}/${file}.svg`;
+}
+
+export function oddPicture(name, box = false) {
+  const cls = box ? "art art-box" : "art";
+  return `<img class="${cls}" src="${artSrc("odd-one-out", name)}" alt="" draggable="false">`;
+}

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" fill="none">
+  <defs><clipPath id="cut-left"><rect x="0" y="0" width="128" height="256"/></clipPath></defs>
+  <g clip-path="url(#cut-left)">
+  <defs><clipPath id="rocket-body"><path d="M128 18 C 168 54 176 108 172 178 L 84 178 C 80 108 88 54 128 18 Z"/></clipPath></defs>
+  <path d="M128 178 C 124 202 108 224 128 240 C 148 224 132 202 128 178 Z" fill="#F5A020" stroke="#1A1714" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+  <path d="M108 176 C 102 204 116 224 128 240 C 140 224 154 204 148 176 Z" fill="#F5A020" stroke="#1A1714" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+  <path d="M118 176 C 116 196 122 208 128 218 C 134 208 140 196 138 176 Z" fill="#FFE070"/>
+  <path d="M88 130 C 60 142 44 170 40 206 L 88 190 Z" fill="#E03A32" stroke="#1A1714" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+  <path d="M88 130 C 60 142 44 170 40 206 L 88 190 Z" transform="matrix(-1 0 0 1 256 0)" fill="#E03A32" stroke="#1A1714" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+  <path d="M128 18 C 168 54 176 108 172 178 L 84 178 C 80 108 88 54 128 18 Z" fill="#F3F5F7" stroke="#1A1714" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+  <g clip-path="url(#rocket-body)">
+  <rect x="60" y="0" width="140" height="82" fill="#E03A32"/>
+  </g>
+  <path d="M92 82 H164" fill="none" stroke="#1A1714" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M128 18 C 168 54 176 108 172 178 L 84 178 C 80 108 88 54 128 18 Z" fill="none" stroke="#1A1714" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="128" cy="124" r="22" fill="#7EC8E8" stroke="#1A1714" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+  </g>
+</svg>

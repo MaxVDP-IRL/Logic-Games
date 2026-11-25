@@ -32,7 +32,7 @@ Each type is generated from a seed, checked before it is shown, and has five lev
 | Võrdlemine | More, fewer, or the same, with pictures and with numerals. |
 | Arvu koostis | Number bonds of 5, 10 and 12, and pairs that make a target. |
 | Mustrid | Continue a colour or shape pattern, including a pattern she builds herself. |
-| Mis ei sobi | Odd one out, with a reason at the last level, and sorting into two boxes. |
+| Mis ei sobi | Odd one out with big pictures, a reason at the last level, and sorting into two boxes. |
 | Asukohasõnad | On, under, left, right, above, in front, behind, and a short step on a grid. Left and right are from the child’s side of the screen. |
 | Kujundid | Circle, triangle, square, rectangle, sphere and cube. |
 | Paarid | Join matching pictures, things that belong together, shadows, and sums with answers. |
@@ -43,7 +43,7 @@ Each type is generated from a seed, checked before it is shown, and has five lev
 | Sudoku | 2×2 picture sudoku, then 4×4 with pictures or the numbers 1–4, including the 2×2 blocks. Only puzzles that can be solved by looking at a row, column or block are kept. |
 | Sõnaloogika | Who is taller, and who has which hat or stands where, from a few spoken clues. |
 | Labürint | A wide path home, then paths that stay on even numbers or on circles. |
-| Peegelpilt | Choose or tap the reflection across a vertical line, then a horizontal one. |
+| Peegelpilt | Choose the half that continues a picture across a bold vertical line, then the whole mirrored picture. |
 | Järjestamine | Shortest to longest, yesterday–today–tomorrow, weekdays, seasons, months. |
 | Analoogiad | Picture pairs, then a simple number link. |
 | Puuduv kujund | A small grid with one missing shape. |
@@ -68,6 +68,6 @@ In the repository on GitHub:
 
 The address will look like `https://<user>.github.io/<repository>/`. Paths are relative, so a project site works without a build step.
 
-The service worker cache is named `nuputaja-v3`. Raise that name in `sw.js` when you ship a change you want already-installed phones to pick up. Pages also loads HTML from the network first, so an open online phone gets the new page and then the new files.
+The service worker cache is named `nuputaja-v4`. Raise that name in `sw.js` when you ship a change you want already-installed phones to pick up. Pages also loads HTML from the network first, so an open online phone gets the new page and then the new files.
 
 A private repository may need GitHub Pages enabled for private sites (this depends on the account plan). The workflow does not change repository settings for you.

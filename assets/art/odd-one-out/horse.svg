@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" fill="none">
+  <path d="M52 104 C 20 112 10 156 20 204 C 34 176 46 154 58 134 Z" fill="#4A2C1A" stroke="#1A1714" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+  <rect x="58" y="150" width="20" height="76" rx="9" fill="#9A5A2C" stroke="#1A1714" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+  <rect x="152" y="150" width="20" height="76" rx="9" fill="#9A5A2C" stroke="#1A1714" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+  <rect x="58" y="212" width="20" height="14" rx="5" fill="#4A2C1A"/>
+  <rect x="152" y="212" width="20" height="14" rx="5" fill="#4A2C1A"/>
+  <ellipse cx="118" cy="132" rx="76" ry="44" fill="#B06A34" stroke="#1A1714" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+  <rect x="82" y="154" width="22" height="72" rx="9" fill="#B06A34" stroke="#1A1714" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+  <rect x="174" y="154" width="22" height="72" rx="9" fill="#B06A34" stroke="#1A1714" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+  <rect x="82" y="212" width="22" height="14" rx="5" fill="#4A2C1A"/>
+  <rect x="174" y="212" width="22" height="14" rx="5" fill="#4A2C1A"/>
+  <path d="M186 54 L 190 22 L 208 48 Z" fill="#B06A34" stroke="#1A1714" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+  <path d="M142 120 L 172 56 L 214 58 L 210 130 L 186 158 Z" fill="#B06A34" stroke="#1A1714" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+  <path d="M142 120 L 168 60 C 172 48 182 42 194 44 L 180 92 L 164 130 Z" fill="#4A2C1A" stroke="#1A1714" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+  <ellipse cx="216" cy="78" rx="38" ry="20" transform="rotate(55 216 78)" fill="#B06A34" stroke="#1A1714" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="206" cy="66" r="5.5" fill="#1A1714"/>
+  <ellipse cx="236" cy="104" rx="3.5" ry="5" transform="rotate(55 236 104)" fill="#1A1714"/>
+</svg>

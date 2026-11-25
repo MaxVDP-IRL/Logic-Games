@@ -16,7 +16,10 @@ test("static shell and versioned cache list the app", () => {
   assert.match(html, /js\/app\.js/);
   assert.match(html, /manifest\.webmanifest/);
   const sw = fs.readFileSync("sw.js", "utf8");
-  assert.match(sw, /nuputaja-v3/);
+  assert.match(sw, /nuputaja-v4/);
+  const art = files("assets").filter((path) => path.endsWith(".svg"));
+  assert.ok(art.length >= 41, "picture svgs");
+  for (const path of art) assert.match(sw, new RegExp(path.replaceAll(".", "\\.")), path);
   assert.match(sw, /if \(response && response\.ok\) \{[\s\S]*cache\.put\("\.\/index\.html"/);
   for (const path of files("js").concat(["css/app.css", "index.html"])) {
     assert.match(sw, new RegExp(path.replaceAll(".", "\\.")), path);

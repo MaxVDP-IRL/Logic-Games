@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" fill="none">
+  <g stroke="#1A1714" stroke-width="7" stroke-linejoin="round" stroke-linecap="round">
+    <!-- cuff at the wrist (bottom), palm up, thumb to the right -->
+    <path d="M72 214 L 72 188 C 40 168 36 132 48 96 C 60 56 86 32 128 32 C 176 32 206 60 214 104 C 220 136 210 168 180 188 L 180 214 C 180 236 72 236 72 214 Z" fill="#2D9A7A"/>
+    <!-- thumb -->
+    <path d="M176 128 C 186 122 216 118 228 132 C 242 148 236 176 214 182 C 198 186 186 176 180 160" fill="#2D9A7A"/>
+    <!-- cuff band -->
+    <path d="M72 188 H180 V220 C 180 232 72 232 72 220 Z" fill="#F7E4D4"/>
+    <path d="M80 188 V220 M100 188 V220 M120 188 V220 M140 188 V220 M160 188 V220" fill="none" stroke-width="4"/>
+  </g>
+</svg>

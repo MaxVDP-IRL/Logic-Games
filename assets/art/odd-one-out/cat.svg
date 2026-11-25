@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" fill="none">
+  <g stroke="#1A1714" stroke-width="7" stroke-linejoin="round" stroke-linecap="round" fill="#E88732">
+    <!-- far legs first -->
+    <rect x="64" y="174" width="24" height="48" rx="12"/>
+    <rect x="148" y="174" width="24" height="48" rx="12"/>
+    <!-- tail -->
+    <path d="M62 150 C 18 136 10 86 36 54 C 48 40 74 46 72 66 C 70 90 32 112 62 150 Z"/>
+    <!-- body -->
+    <ellipse cx="118" cy="148" rx="70" ry="46"/>
+    <!-- near legs -->
+    <rect x="88" y="178" width="26" height="48" rx="13"/>
+    <rect x="172" y="178" width="26" height="48" rx="13"/>
+    <!-- back ear -->
+    <path d="M168 90 L 176 42 L 198 82 Z"/>
+    <!-- head -->
+    <path d="M166 122 C 164 86 188 66 214 70 C 234 74 246 96 240 122 C 236 144 216 154 194 152 C 176 150 166 140 166 122 Z"/>
+    <!-- front ear -->
+    <path d="M198 80 L 214 38 L 230 86 Z"/>
+  </g>
+  <g stroke="#1A1714" stroke-width="7" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M174 86 L 180 54 L 194 80 Z" fill="#EEA0A0"/>
+    <path d="M204 78 L 214 50 L 224 84 Z" fill="#EEA0A0"/>
+    <ellipse cx="222" cy="126" rx="16" ry="12" fill="#F3D0A0"/>
+  </g>
+  <ellipse cx="210" cy="106" rx="6" ry="7" fill="#1A1714"/>
+  <path d="M232 118 L 242 122 L 232 126 Z" fill="#EEA0A0" stroke="#1A1714" stroke-width="3" stroke-linejoin="round"/>
+</svg>

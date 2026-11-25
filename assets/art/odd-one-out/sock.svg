@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" fill="none">
+  <g stroke="#1A1714" stroke-width="7" stroke-linejoin="round" stroke-linecap="round">
+    <!-- classic side profile: cuff at top, heel left, foot pointing right -->
+    <path d="M86 28 C 70 28 66 36 66 48 L 66 128 C 66 140 60 150 50 160 C 34 176 34 196 50 210 C 62 222 86 226 120 226 L 186 226 C 222 226 236 206 236 184 C 236 158 214 142 186 142 L 148 142 C 140 142 134 136 134 128 L 134 48 C 134 36 130 28 114 28 Z" fill="#E85A6A"/>
+    <!-- cuff -->
+    <path d="M66 28 L 134 28 L 134 64 L 66 64 Z" fill="#F7E4D4"/>
+    <!-- cuff ribs -->
+    <path d="M74 28 V64 M90 28 V64 M106 28 V64 M122 28 V64" fill="none" stroke-width="4"/>
+    <!-- contrasting heel and toe -->
+    <path d="M66 150 C 36 172 36 206 66 220 C 58 200 54 176 66 150 Z" fill="#D44558"/>
+    <path d="M186 142 C 226 142 240 164 236 188 C 230 214 200 226 186 226 C 214 214 222 184 186 142 Z" fill="#D44558"/>
+  </g>
+</svg>
