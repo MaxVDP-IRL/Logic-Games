@@ -1,9 +1,31 @@
 export const UI = {
   hello: { et: "Tere, Mia!", en: "Hello, Mia!" },
-  lead: {
-    et: "Rahulik harjutus. Umbes kuus lühikest ülesannet.",
-    en: "A calm practice. About six short puzzles.",
+  stickerGoal: {
+    et: "Tee {n} ülesannet ja saad kleepsu.",
+    en: "Finish {n} puzzles to win a sticker.",
   },
+  progressSay: {
+    et: "Tehtud on {have}. Kokku on {n}.",
+    en: "{have} done. {n} in all.",
+  },
+  levelNeed: {
+    et: "Uueks tasemeks on vaja {n}.",
+    en: "A new level needs {n}.",
+  },
+  levelSay: {
+    et: "Uue taseme poole on {have}. Vaja on {n}.",
+    en: "{have} toward the next level. {n} are needed.",
+  },
+  sessionDone: {
+    et: "{n} ülesannet on tehtud. Said kleepsu.",
+    en: "{n} puzzles done. You got a sticker.",
+  },
+  sessionDoneStar: {
+    et: "{n} ülesannet on tehtud. Said kuldse tähe.",
+    en: "{n} puzzles done. You got a gold star.",
+  },
+  meterSticker: { et: "kleeps", en: "sticker" },
+  meterLevel: { et: "tase", en: "level" },
   start: { et: "Hakkame pihta", en: "Let’s begin" },
   pick: { et: "Vali ülesanne", en: "Choose a puzzle" },
   stickers: { et: "Kleebiseraamat", en: "Sticker book" },
@@ -33,8 +55,8 @@ export const UI = {
   level: { et: "Tase", en: "Level" },
   now: { et: "praegu", en: "now" },
   emptyBook: {
-    et: "Kleepsud tulevad siia, kui üks harjutus saab tehtud.",
-    en: "Stickers come here when a practice is finished.",
+    et: "Kleeps tuleb siia, kui 6 ülesannet on tehtud.",
+    en: "A sticker comes here when 6 puzzles are finished.",
   },
   newSticker: { et: "Uus kleeps raamatusse.", en: "A new sticker for the book." },
   bookFull: { et: "Raamat on täis. Said kuldse tähe.", en: "The book is full. You got a gold star." },
@@ -57,4 +79,12 @@ export function tx(key, lang) {
   const row = UI[key];
   if (!row) return key;
   return row[lang] || row.et;
+}
+
+export function txf(key, lang, vars = {}) {
+  let text = tx(key, lang);
+  for (const [name, value] of Object.entries(vars)) {
+    text = text.replaceAll(`{${name}}`, String(value));
+  }
+  return text;
 }

@@ -136,6 +136,9 @@ export function generate(level, seed) {
         a = rng.int(0, 10);
         b = rng.int(0, Math.min(10, cap - a));
         if (a + b > 10 && a < 10 && b < 10 && rng.chance(0.7)) continue;
+      } else if (level === 1) {
+        a = rng.int(1, cap - 1);
+        b = rng.int(1, cap - a);
       } else {
         a = rng.int(0, cap);
         b = rng.int(0, cap - a);

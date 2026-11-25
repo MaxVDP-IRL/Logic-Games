@@ -79,8 +79,11 @@ export function generate(level, seed) {
   }
 
   if (level === 2) {
-    const shape = rng.pick(["circle", "triangle", "square"]);
-    const names = ["circle", "triangle", "square"].map((id) => ({ id, et: NAME[id].et, en: NAME[id].en }));
+    const all = ["circle", "triangle", "square", "rectangle"];
+    const shape = rng.pick(all);
+    const names = rng.shuffle(all).slice(0, 3);
+    if (!names.includes(shape)) names[0] = shape;
+    const options = names.map((id) => ({ id, et: NAME[id].et, en: NAME[id].en }));
     return basePuzzle(meta, level, seed, {
       view: "shapes",
       mode: "name",
@@ -90,9 +93,9 @@ export function generate(level, seed) {
       praise: { et: "Nimi on õige.", en: "The name is right." },
       explain: { et: `See on ${NAME[shape].et}.`, en: `This is a ${NAME[shape].en}.` },
       figure: { shape, color: "#1a1714" },
-      options: names,
+      options,
       solution: shape,
-      alt: names.find((n) => n.id !== shape).id,
+      alt: options.find((n) => n.id !== shape).id,
     });
   }
 

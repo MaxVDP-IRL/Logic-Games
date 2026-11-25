@@ -46,7 +46,11 @@ export function generate(level, seed) {
   }
   if (level === 1) {
     motif.length = 0;
-    motif.push({ shape, color: colors[0] }, { shape, color: colors[1] });
+    if (rng.chance(0.5)) {
+      motif.push({ shape, color: colors[0] }, { shape, color: colors[1] });
+    } else {
+      motif.push({ shape: shapes[0], color: colors[0] }, { shape: shapes[1], color: colors[0] });
+    }
   }
   if (level === 2 && motif.length < 3 && rng.chance(0.5)) {
     motif.length = 0;

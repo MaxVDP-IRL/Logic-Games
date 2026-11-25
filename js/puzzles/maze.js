@@ -116,24 +116,59 @@ function carve(cols, rows, rng) {
   return { hWall, vWall };
 }
 
-function snake(cols, rows) {
+/** Easy 4×2 corridors: one open path, no branches. Each feels like a different route home. */
+const CORRIDORS = [
+  [[0, 0], [1, 0], [2, 0], [3, 0], [3, 1], [2, 1], [1, 1], [0, 1]],
+  [[0, 0], [0, 1], [1, 1], [2, 1], [3, 1], [3, 0]],
+  [[0, 0], [1, 0], [1, 1], [2, 1], [3, 1], [3, 0], [2, 0]],
+  [[0, 0], [1, 0], [2, 0], [2, 1], [1, 1], [0, 1]],
+  [[0, 0], [1, 0], [1, 1], [2, 1], [2, 0], [3, 0], [3, 1]],
+  [[0, 0], [0, 1], [1, 1], [1, 0], [2, 0], [3, 0], [3, 1], [2, 1]],
+];
+
+function wallsFromPath(cols, rows, cells) {
   const hWall = Array.from({ length: rows + 1 }, () => Array(cols).fill(true));
   const vWall = Array.from({ length: rows }, () => Array(cols + 1).fill(true));
-  // A single corridor: right along row 0, down, left along row 1 if it exists.
-  for (let c = 0; c < cols - 1; c++) vWall[0][c + 1] = false;
-  if (rows > 1) {
-    hWall[1][cols - 1] = false;
-    for (let c = cols - 1; c > 0; c--) vWall[1][c] = false;
+  for (let i = 1; i < cells.length; i++) {
+    const a = cells[i - 1];
+    const b = cells[i];
+    if (a.r === b.r && b.c === a.c + 1) vWall[a.r][a.c + 1] = false;
+    else if (a.r === b.r && b.c === a.c - 1) vWall[a.r][a.c] = false;
+    else if (a.c === b.c && b.r === a.r + 1) hWall[a.r + 1][a.c] = false;
+    else if (a.c === b.c && b.r === a.r - 1) hWall[a.r][a.c] = false;
   }
-  return { hWall, vWall, end: rows > 1 ? { c: 0, r: 1 } : { c: cols - 1, r: 0 } };
+  return { hWall, vWall, end: cells[cells.length - 1] };
 }
 
 export function generate(level, seed) {
   const rng = makeRng(mixSeed(seed, `maze-${level}`));
+  if (level === 1) {
+    const cols = 4;
+    const rows = 2;
+    const cells = rng.pick(CORRIDORS).map(([c, r]) => ({ c, r }));
+    const carved = wallsFromPath(cols, rows, cells);
+    const puzzle = {
+      kind: "walls",
+      rule: null,
+      cols,
+      rows,
+      hWall: carved.hWall,
+      vWall: carved.vWall,
+      symbols: {},
+      start: { c: 0, r: 0 },
+      end: carved.end,
+    };
+    const solution = pathBetween(puzzle);
+    if (!solution || countPaths(puzzle) !== 1) return generate(level, seed + 7);
+    return pack(level, seed, puzzle, solution, {
+      et: "Aita tegelane koju. Jää teele.",
+      en: "Help them get home. Stay on the path.",
+    });
+  }
   if (level <= 3) {
-    const cols = level === 1 ? 4 : level === 2 ? 5 : 6;
-    const rows = level === 1 ? 2 : level === 2 ? 5 : 6;
-    const carved = level === 1 ? snake(cols, rows) : { ...carve(cols, rows, rng), end: { c: cols - 1, r: rows - 1 } };
+    const cols = level === 2 ? 5 : 6;
+    const rows = level === 2 ? 5 : 6;
+    const carved = { ...carve(cols, rows, rng), end: { c: cols - 1, r: rows - 1 } };
     const puzzle = {
       kind: "walls",
       rule: null,

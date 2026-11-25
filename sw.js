@@ -1,4 +1,4 @@
-const VERSION = "nuputaja-v2";
+const VERSION = "nuputaja-v3";
 
 const ASSETS = [
   "./",
@@ -42,6 +42,7 @@ const ASSETS = [
   "./js/puzzles/stories.js",
   "./js/puzzles/sudoku.js",
   "./js/puzzles/util.js",
+  "./js/puzzles/variety.js",
   "./js/puzzles/wordlogic.js",
 ];
 

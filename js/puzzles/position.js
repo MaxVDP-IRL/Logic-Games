@@ -134,8 +134,13 @@ export function generate(level, seed) {
     target = other;
     phrase = { et: "kassist vasakul ja laua peal", en: "to the left of the cat and on the table" };
   } else {
-    const pool = level === 1 ? SLOTS.filter((s) => s.id === "on-left" || s.id === "under") : level === 2 ? SLOTS.filter((s) => s.id === "left" || s.id === "right" || s.id === "on-left") : SLOTS;
-    const chosen = rng.shuffle(pool).slice(0, 4);
+    const pool = level === 1
+      ? SLOTS.filter((s) => s.id === "on-left" || s.id === "under" || s.id === "above")
+      : level === 2
+        ? SLOTS.filter((s) => s.id === "left" || s.id === "right" || s.id === "on-left")
+        : SLOTS;
+    const take = level === 1 ? rng.int(2, 3) : 4;
+    const chosen = rng.shuffle(pool).slice(0, Math.min(take, pool.length));
     const icons = rng.shuffle(FIGURES);
     items = chosen.map((slot, i) => ({
       id: `o${i}`,
