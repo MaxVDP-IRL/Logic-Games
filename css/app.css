@@ -427,33 +427,43 @@ button:focus-visible, .choice:focus-visible, .cell:focus-visible {
 .sorts .plate { flex: 1 1 42%; max-width: 100%; }
 .hold { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; width: 100%; }
 .mirror-board { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; max-width: 100%; }
-.mirror-stem, .mirror-pic { display: flex; align-items: stretch; justify-content: center; }
+.mirror-stem, .mirror-pic { display: flex; align-items: stretch; justify-content: center; max-width: 100%; }
+.mirror-pic { flex: 0 0 auto; }
 .mirror-choices { width: 100%; max-width: 100%; }
+.mirror-choices .choice {
+  flex: 0 0 auto;
+  width: max-content;
+  max-width: 100%;
+  overflow: visible;
+  padding: 4px;
+}
 .mirror-line {
   width: 8px;
   flex: 0 0 8px;
+  align-self: stretch;
   background: var(--ink);
   border-radius: 4px;
 }
 .half {
-  --half: 52px;
+  --half: 78px;
   width: var(--half);
   height: calc(var(--half) * 2);
+  aspect-ratio: 1 / 2;
   overflow: hidden;
   position: relative;
-  flex: 0 0 auto;
+  flex: 0 0 var(--half);
   background: #fff;
 }
-.mirror-stem .half { --half: 78px; }
 .half img {
   position: absolute;
   top: 0;
   height: 100%;
   width: calc(var(--half) * 2);
   max-width: none;
+  object-fit: contain;
 }
-.half.align-left img { left: 0; }
-.half.align-right img { left: calc(var(--half) * -1); }
+.half.align-left img { left: 0; object-position: left center; }
+.half.align-right img { left: calc(var(--half) * -1); object-position: right center; }
 .bit.on { background: var(--ink); }
 .bit.fixed { background: var(--ink); }
 .mini { display: inline-grid; gap: 2px; padding: 6px; }
@@ -557,15 +567,13 @@ button:focus-visible, .choice:focus-visible, .cell:focus-visible {
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 @media (min-width: 380px) {
   .art { width: 124px; height: 124px; }
-  .half { --half: 60px; }
-  .mirror-stem .half { --half: 88px; }
+  .half { --half: 88px; }
 }
 @media (min-width: 800px) {
   .album { grid-template-columns: repeat(6, 1fr); }
   .sheet { padding: 22px 26px 26px; }
   .art { width: 132px; height: 132px; }
-  .half { --half: 72px; }
-  .mirror-stem .half { --half: 104px; }
+  .half { --half: 104px; }
 }
 @media (max-width: 420px) {
   .pad { gap: 4px; grid-template-columns: repeat(6, minmax(0, 1fr)); }
