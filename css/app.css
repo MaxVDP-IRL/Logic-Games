@@ -449,7 +449,7 @@ button:focus-visible, .choice:focus-visible, .cell:focus-visible {
 .sign-legend-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 14px; width: 100%; }
 .sign-chip { display: flex; align-items: center; gap: 4px; font-family: var(--sheet); font-size: 0.95rem; }
 .sign-chip .sign-mark { font-size: 1.8rem; }
-.mouth { width: 60px; height: 48px; display: block; flex: 0 0 auto; }
+.mouth { width: 78px; height: 64px; display: block; flex: 0 0 auto; }
 .sign-legend p { margin: 0; text-align: center; font-family: var(--sheet); font-size: 0.98rem; line-height: 1.25; }
 .sign-groups, .sign-choices, .sign-pair, .sign-eq { width: 100%; max-width: 100%; }
 .sign-groups .choice, .sign-choices .choice { flex: 1 1 0; min-width: 0; }

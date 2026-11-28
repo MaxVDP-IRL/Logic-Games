@@ -59,8 +59,8 @@ const MOUTH = {
 
 const COPY = {
   1: {
-    more: { et: "Tõmba ring ümber hunniku, kus on rohkem.", en: "Circle the group that has more." },
-    fewer: { et: "Tõmba ring ümber hunniku, kus on vähem.", en: "Circle the group that has fewer." },
+    more: { et: "Puuduta hunnikut, kus on rohkem.", en: "Tap the group with more." },
+    fewer: { et: "Puuduta hunnikut, kus on vähem.", en: "Tap the group with fewer." },
     hint: {
       et: `Loe mõlemad hunnikud. ${MOUTH.et}`,
       en: `Count both groups. ${MOUTH.en}`,
@@ -68,7 +68,7 @@ const COPY = {
     nudge: { et: "Loe ühe hunniku pildid näpuga üle.", en: "Count one group's pictures with your finger." },
   },
   2: {
-    prompt: { et: "Pane arvude vahele õige märk.", en: "Put the right sign between the numbers." },
+    prompt: { et: "Vali märk, mis jääb arvude vahele.", en: "Choose the sign that goes between the numbers." },
     hint: MOUTH,
     nudge: { et: "Kui arvud on samad, vali võrdne.", en: "If the numbers are the same, choose equal." },
   },

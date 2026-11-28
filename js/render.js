@@ -1410,14 +1410,15 @@ function findEmpty(grid) {
   return null;
 }
 
-/** Open mouth. "lt" faces right and reads as <; "gt" faces left and reads as >. */
+/** Pac-Man crocodile. "lt" opens right, like <. "gt" opens left, like >. */
 function mouthSvg(shape) {
-  const flip = shape === "gt" ? ' transform="translate(100 0) scale(-1 1)"' : "";
-  return `<svg class="mouth" viewBox="0 0 100 80" aria-hidden="true">
+  const flip = shape === "gt" ? ' transform="translate(120 0) scale(-1 1)"' : "";
+  return `<svg class="mouth" viewBox="0 0 120 100" aria-hidden="true">
     <g${flip}>
-      <path d="M16 40 L92 8 L92 72 Z" fill="#fffdf8" stroke="#1c1915" stroke-width="3.2" stroke-linejoin="round"/>
-      <circle cx="32" cy="26" r="2.8" fill="#1c1915"/>
-      <path d="M50 27v11M66 20v12M80 15v11" fill="none" stroke="#1c1915" stroke-width="2.6" stroke-linecap="round"/>
+      <path d="M62 50 L88 16 A 44 44 0 1 0 88 84 Z" fill="#fffdf8" stroke="#1c1915" stroke-width="5" stroke-linejoin="round"/>
+      <circle cx="38" cy="46" r="12" fill="#fffdf8" stroke="#1c1915" stroke-width="3.5"/>
+      <circle cx="43" cy="47" r="5" fill="#1c1915"/>
+      <path d="M78 22 L74 36 L88 28 Z M86 18 L82 34 L98 26 Z M86 78 L82 64 L98 72 Z" fill="#1c1915"/>
     </g>
   </svg>`;
 }
@@ -1434,10 +1435,17 @@ function signLegend(lang) {
 
 function signChip(shape, glyph, et, en, lang) {
   const chip = el("div", "sign-chip");
-  chip.insertAdjacentHTML("beforeend", mouthSvg(shape));
   const mark = el("b", "sign-mark");
   mark.textContent = glyph;
-  chip.append(mark, t(el("span"), et, en, lang));
+  const words = t(el("span"), et, en, lang);
+  const face = mouthSvg(shape);
+  if (shape === "gt") {
+    chip.append(mark, words);
+    chip.insertAdjacentHTML("beforeend", face);
+  } else {
+    chip.insertAdjacentHTML("beforeend", face);
+    chip.append(mark, words);
+  }
   return chip;
 }
 

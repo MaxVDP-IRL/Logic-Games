@@ -133,6 +133,32 @@ test("signs puzzles teach < > = and speak the true sentence", () => {
   assert.deepEqual([...modes[5]].sort(), ["numerals", "sum"]);
 });
 
+test("level 1 asks for a tap, and no signs prompt says to draw a ring", () => {
+  for (let seed = 1; seed <= 40; seed++) {
+    const puzzle = generate("signs", 1, seed);
+    if (puzzle.ask === "more") {
+      assert.match(puzzle.prompt.et, /Puuduta hunnikut, kus on rohkem\./);
+      assert.match(puzzle.prompt.en, /Tap the group with more\./);
+    } else {
+      assert.match(puzzle.prompt.et, /Puuduta hunnikut, kus on vähem\./);
+      assert.match(puzzle.prompt.en, /Tap the group with fewer\./);
+    }
+  }
+  for (let level = 1; level <= 5; level++) {
+    for (let seed = 1; seed <= 30; seed++) {
+      const puzzle = generate("signs", level, seed);
+      const blob = [puzzle.prompt, puzzle.hint, puzzle.nudge].map((line) => `${line.et} ${line.en}`).join(" ");
+      assert.doesNotMatch(blob, /Tõmba ring|ring ümber|Circle the|Draw a ring/);
+      if (puzzle.mode === "pictures" || puzzle.mode === "numerals" || puzzle.mode === "sum") {
+        assert.match(puzzle.prompt.et, /[Vv]ali/);
+        assert.match(puzzle.prompt.en, /[Cc]hoose/);
+      }
+      if (puzzle.mode === "fill") assert.match(puzzle.prompt.et, /Vali arv/);
+      if (puzzle.mode === "judge") assert.match(puzzle.prompt.et, /Kas see võrdlus on õige\?/);
+    }
+  }
+});
+
 test("sign pictures reuse the odd-one-out art", () => {
   for (const item of PICTURES) {
     assert.equal(fs.existsSync(`assets/art/odd-one-out/${item.art}.svg`), true, item.art);
