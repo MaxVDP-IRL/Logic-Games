@@ -444,6 +444,47 @@ button:focus-visible, .choice:focus-visible, .cell:focus-visible {
   background: var(--ink);
   border-radius: 4px;
 }
+.sign-board { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; max-width: 100%; }
+.sign-legend { display: flex; flex-direction: column; align-items: center; gap: 4px; width: 100%; }
+.sign-legend-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 14px; width: 100%; }
+.sign-chip { display: flex; align-items: center; gap: 4px; font-family: var(--sheet); font-size: 0.95rem; }
+.sign-chip .sign-mark { font-size: 1.8rem; }
+.mouth { width: 78px; height: 64px; display: block; flex: 0 0 auto; }
+.sign-legend p { margin: 0; text-align: center; font-family: var(--sheet); font-size: 0.98rem; line-height: 1.25; }
+.sign-groups, .sign-choices, .sign-pair, .sign-eq { width: 100%; max-width: 100%; }
+.sign-groups .choice, .sign-choices .choice { flex: 1 1 0; min-width: 0; }
+.sign-groups .choice { min-height: 112px; padding: 8px 4px; }
+.sign-choices .choice { min-height: 88px; padding: 8px 4px; }
+.sign-pics { display: flex; flex-wrap: wrap; gap: 3px; justify-content: center; width: 100%; }
+.sign-pics img { width: 36px; height: 36px; object-fit: contain; pointer-events: none; user-select: none; }
+.sign-pics.big img { width: 52px; height: 52px; }
+.sign-pics.tiny img { width: 28px; height: 28px; }
+.sign-pair { display: flex; align-items: center; justify-content: center; gap: 6px; }
+.sign-side { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.sign-num, .sign-mark, .sign-word, .sign-eq .n, .sign-eq .plus, .sign-eq .q, .sign-pair .q {
+  font-family: var(--sheet);
+  line-height: 1;
+  color: var(--ink);
+}
+.sign-num { font-size: 2.2rem; }
+.sign-mark { font-size: 2.6rem; font-weight: 500; }
+.sign-word { font-size: 1.7rem; }
+.sign-eq { display: flex; flex-wrap: nowrap; align-items: center; justify-content: center; gap: 6px; }
+.sign-eq .n {
+  min-width: 48px;
+  height: 60px;
+  padding: 0 8px;
+  border: 2px solid var(--ink);
+  background: var(--paper);
+  border-radius: 8px;
+  font-size: 1.9rem;
+  display: grid;
+  place-items: center;
+}
+.sign-eq .n.dash { border-style: dashed; background: #fff; min-width: 56px; }
+.sign-eq .plus, .sign-eq .q, .sign-pair .q { font-size: 2.1rem; flex: 0 0 auto; }
+.sign-eq .q.shown { font-size: 2.5rem; }
+.sign-choices .caption { font-size: 0.78rem; line-height: 1.15; text-align: center; }
 .half {
   --half: 78px;
   width: var(--half);
