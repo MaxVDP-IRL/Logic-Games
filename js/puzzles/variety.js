@@ -94,6 +94,21 @@ export function feelKey(puzzle) {
     const ask = (puzzle.coins || []).find((c) => c.uid === puzzle.solution);
     return `mon:${puzzle.mode}:${bag}:${ask ? ask.id : puzzle.solution}:${puzzle.price || ""}`;
   }
+  if (t === "signs") {
+    if (puzzle.mode === "groups") {
+      return `sgn:g:${puzzle.groups.map((g) => `${g.art}*${g.count}`).join(",")}:${puzzle.ask}`;
+    }
+    if (puzzle.mode === "pictures") {
+      return `sgn:p:${puzzle.leftItem.art}${puzzle.left}?${puzzle.rightItem.art}${puzzle.right}`;
+    }
+    if (puzzle.mode === "judge") return `sgn:j:${puzzle.left}${puzzle.shown}${puzzle.right}`;
+    if (puzzle.mode === "fill") {
+      const nums = puzzle.options.map((opt) => opt.n).sort((a, b) => a - b).join(",");
+      return `sgn:f:${puzzle.rel}${puzzle.target}:${nums}`;
+    }
+    if (puzzle.mode === "sum") return `sgn:s:${puzzle.expr.join("+")}?${puzzle.right}`;
+    return `sgn:n:${puzzle.left}?${puzzle.right}`;
+  }
   return `${t}:${JSON.stringify(puzzle.solution)}:${puzzle.prompt?.et || ""}`;
 }
 

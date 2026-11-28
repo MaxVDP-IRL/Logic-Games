@@ -20,11 +20,12 @@ import * as analogy from "./analogy.js";
 import * as matrix from "./matrix.js";
 import * as clock from "./clock.js";
 import * as money from "./money.js";
+import * as signs from "./signs.js";
 
 export const MODULES = [
   missing, arithmetic, compare, bonds, patterns, oddone, position, shapes,
   matching, stories, memory, listen, pyramid, sudoku, wordlogic, maze, mirror,
-  order, analogy, matrix, clock, money,
+  order, analogy, matrix, clock, money, signs,
 ];
 
 export const TYPE_ORDER = MODULES.map((m) => m.meta.id);

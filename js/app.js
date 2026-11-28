@@ -569,7 +569,7 @@ function submit(answer) {
   const ok = grade(item.puzzle, given);
   if (ok) {
     locked = true;
-    showNote(item.puzzle.praise, "good");
+    showNote(item.puzzle.spoken || item.puzzle.praise, "good");
     if (item.mode === "solo" || item.mode === "guided") {
       state.seen[item.type] = true;
       if (item.mode === "solo") {
@@ -583,7 +583,8 @@ function submit(answer) {
     const done = app.querySelector(".dock .btn.primary");
     if (done) done.textContent = tx("next", L());
     syncMeters();
-    speak(item.puzzle.praise[L()], L());
+    const line = item.puzzle.spoken || item.puzzle.praise;
+    speak(line[L()], L());
     return;
   }
   misses += 1;
@@ -603,6 +604,7 @@ function revealAndContinue(item) {
   if (locked) return;
   if (mounted?.revealStep) mounted.revealStep();
   showNote(item.puzzle.explain, "help");
+  if (item.puzzle.spoken) speak(item.puzzle.spoken[L()], L());
   if (item.mode === "solo" || item.mode === "guided") {
     state.seen[item.type] = true;
     if (item.mode === "solo") recordResult(state, item.type, item.level, false, today());
@@ -619,7 +621,10 @@ function showNote(copy, kind) {
   if (!note) return;
   note.hidden = false;
   note.className = `note ${kind}`;
-  note.querySelector("p").textContent = copy[L()];
+  const p = note.querySelector("p");
+  p.dataset.et = copy.et;
+  p.dataset.en = copy.en;
+  p.textContent = copy[L()];
 }
 
 function advance() {

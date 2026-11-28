@@ -263,6 +263,56 @@ const VIEWS = {
     return { getAnswer: () => picked };
   },
 
+  signs(host, puzzle, api) {
+    const board = el("div", "sign-board");
+    board.dataset.mode = puzzle.mode;
+    if (puzzle.mode === "groups") board.append(signLegend(api.lang));
+    if (puzzle.mode === "pictures") board.append(signPicturePair(puzzle));
+    if (puzzle.mode === "numerals" || puzzle.mode === "sum" || puzzle.mode === "judge" || puzzle.mode === "fill") {
+      board.append(signEquation(puzzle));
+    }
+    const options = puzzle.mode === "groups" ? puzzle.groups : puzzle.options;
+    const rowClass = puzzle.mode === "groups"
+      ? "choices sign-groups"
+      : `choices sign-choices${options.length === 2 ? " two" : ""}`;
+    let picked = api.mode === "example" ? puzzle.solution : null;
+    const row = el("div", rowClass);
+    const mark = () => {
+      row.querySelectorAll("button").forEach((button) => {
+        button.classList.toggle("circled", button.dataset.id === String(picked));
+      });
+    };
+    options.forEach((opt) => {
+      const button = el("button", "choice");
+      button.type = "button";
+      button.dataset.id = opt.id;
+      if (puzzle.mode === "groups") {
+        button.append(signPictures(opt.art, opt.count), t(el("span", "caption"), opt.et, opt.en, api.lang));
+      } else if (puzzle.mode === "judge") {
+        button.append(t(el("span", "sign-word"), opt.et, opt.en, api.lang));
+      } else if (puzzle.mode === "fill") {
+        const markNode = el("span", "sign-mark");
+        markNode.textContent = String(opt.n);
+        button.append(markNode);
+      } else {
+        const markNode = el("span", "sign-mark");
+        markNode.textContent = opt.id;
+        button.append(markNode, t(el("span", "caption"), opt.et, opt.en, api.lang));
+      }
+      button.addEventListener("click", () => {
+        if (api.mode === "example") return;
+        picked = opt.id;
+        mark();
+        api.onPick(opt.id);
+      });
+      row.append(button);
+    });
+    mark();
+    board.append(row);
+    host.append(board);
+    return { getAnswer: () => picked };
+  },
+
   bonds(host, puzzle, api) {
     if (puzzle.mode === "pairs") {
       const chosen = new Set(api.mode === "example" ? puzzle.solution : []);
@@ -1358,6 +1408,92 @@ function findEmpty(grid) {
     for (let i = 0; i < grid[r].length; i++) if (grid[r][i] == null) return { r, i };
   }
   return null;
+}
+
+/** Open mouth. "lt" faces right and reads as <; "gt" faces left and reads as >. */
+function mouthSvg(shape) {
+  const flip = shape === "gt" ? ' transform="translate(100 0) scale(-1 1)"' : "";
+  return `<svg class="mouth" viewBox="0 0 100 80" aria-hidden="true">
+    <g${flip}>
+      <path d="M16 40 L92 8 L92 72 Z" fill="#fffdf8" stroke="#1c1915" stroke-width="3.2" stroke-linejoin="round"/>
+      <circle cx="32" cy="26" r="2.8" fill="#1c1915"/>
+      <path d="M50 27v11M66 20v12M80 15v11" fill="none" stroke="#1c1915" stroke-width="2.6" stroke-linecap="round"/>
+    </g>
+  </svg>`;
+}
+
+function signLegend(lang) {
+  const box = el("div", "sign-legend");
+  const row = el("div", "sign-legend-row");
+  row.append(signChip("lt", "<", "väiksem kui", "less than", lang));
+  row.append(signChip("gt", ">", "suurem kui", "greater than", lang));
+  const words = t(el("p"), "Suu avaneb suurema poole.", "The mouth opens toward the bigger one.", lang);
+  box.append(row, words);
+  return box;
+}
+
+function signChip(shape, glyph, et, en, lang) {
+  const chip = el("div", "sign-chip");
+  chip.insertAdjacentHTML("beforeend", mouthSvg(shape));
+  const mark = el("b", "sign-mark");
+  mark.textContent = glyph;
+  chip.append(mark, t(el("span"), et, en, lang));
+  return chip;
+}
+
+function signPictures(name, count) {
+  const size = count <= 3 ? "big" : count <= 6 ? "" : "tiny";
+  const wrap = el("div", `sign-pics ${size}`.trim());
+  for (let i = 0; i < count; i++) {
+    const img = document.createElement("img");
+    img.src = artSrc("odd-one-out", name);
+    img.alt = "";
+    img.draggable = false;
+    wrap.append(img);
+  }
+  return wrap;
+}
+
+function signText(className, text) {
+  const node = el("div", className);
+  node.textContent = text;
+  return node;
+}
+
+function signPicturePair(puzzle) {
+  const row = el("div", "sign-pair");
+  row.append(signSide(puzzle.leftItem, puzzle.left), signText("q", "?"), signSide(puzzle.rightItem, puzzle.right));
+  return row;
+}
+
+function signSide(item, count) {
+  const col = el("div", "sign-side");
+  col.append(signText("sign-num", String(count)), signPictures(item.art, count));
+  return col;
+}
+
+function signEquation(puzzle) {
+  const row = el("div", "sign-eq");
+  if (puzzle.mode === "sum") {
+    row.append(
+      signText("n", String(puzzle.expr[0])),
+      signText("plus", "+"),
+      signText("n", String(puzzle.expr[1])),
+      signText("q", "?"),
+      signText("n", String(puzzle.right))
+    );
+    return row;
+  }
+  if (puzzle.mode === "fill") {
+    row.append(signText("n dash", ""), signText("q shown", puzzle.rel), signText("n", String(puzzle.target)));
+    return row;
+  }
+  if (puzzle.mode === "judge") {
+    row.append(signText("n", String(puzzle.left)), signText("q shown", puzzle.shown), signText("n", String(puzzle.right)));
+    return row;
+  }
+  row.append(signText("n", String(puzzle.left)), signText("q", "?"), signText("n", String(puzzle.right)));
+  return row;
 }
 
 function can(puzzle, a, b) {

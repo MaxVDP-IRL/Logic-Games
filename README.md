@@ -49,6 +49,7 @@ Each type is generated from a seed, checked before it is shown, and has five lev
 | Puuduv kujund | A small grid with one missing shape. |
 | Kell | Hours, then half hours. Estonian uses *kell on kolm* and *pool kaks* (1:30). |
 | Raha | 1€ and 2€ coins, small totals, “is there enough?”, cents, and change from 10 euros. |
+| Väiksem ja suurem | The signs <, > and =. Count two picture groups, then choose less than, greater than or equal, including a true-or-false sentence and a small sum. |
 
 Instructions use the short imperative style of Estonian worksheets (*Kirjuta*, *Ühenda*, *Tõmba ring ümber*, *Leia*, *Järjesta*). The speaker button reads the instruction. If the device has an Estonian voice it is used; otherwise an English voice reads the same text. If speech is unavailable, the words stay on the page.
 
@@ -68,6 +69,6 @@ In the repository on GitHub:
 
 The address will look like `https://<user>.github.io/<repository>/`. Paths are relative, so a project site works without a build step.
 
-The service worker cache is named `nuputaja-v4`. Raise that name in `sw.js` when you ship a change you want already-installed phones to pick up. Pages also loads HTML from the network first, so an open online phone gets the new page and then the new files.
+The service worker cache is named `nuputaja-v5`. Raise that name in `sw.js` when you ship a change you want already-installed phones to pick up. Pages also loads HTML from the network first, so an open online phone gets the new page and then the new files.
 
 A private repository may need GitHub Pages enabled for private sites (this depends on the account plan). The workflow does not change repository settings for you.
