@@ -716,6 +716,17 @@ function fillWords(node, text) {
 }
 
 if ("serviceWorker" in navigator) {
+  let reloading = false;
+  let hadController = Boolean(navigator.serviceWorker.controller);
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (!hadController) {
+      hadController = true;
+      return;
+    }
+    if (reloading) return;
+    reloading = true;
+    window.location.reload();
+  });
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("./sw.js").catch(() => {});
   });
